@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BNB Chain — Slide Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #F0B90B;
+      --bg: #0A0A0A;
+      --card: #1A1A1A;
+      --elevated: #252525;
+      --th: #2C2C2C;
+      --tr1: #1E1E1E;
+      --tr2: #252525;
+      --white: #FFFFFF;
+      --sec: #AAAAAA;
+      --muted: #555555;
+      --border: rgba(255,255,255,0.07);
+      --border-med: rgba(255,255,255,0.13);
+      --font: 'Space Grotesk', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--white); -webkit-font-smoothing: antialiased; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0A0A0A; }
+    ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+
+    /* ── Nav ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 52px; display: flex; align-items: center; padding: 0 40px; gap: 20px;
+      background: rgba(10,10,10,0.94); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.05em; }
+    .nav-brand span { color: var(--yellow); }
+    .nav-sep { width: 1px; height: 18px; background: var(--border-med); margin: 0 4px; }
+    .nav-subtitle { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .nav-links { margin-left: auto; display: flex; gap: 24px; }
+    .nav-links a { font-size: 11px; color: var(--sec); text-decoration: none; text-transform: uppercase; letter-spacing: 0.06em; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--yellow); }
+
+    /* ── Layout ── */
+    .page { padding-top: 52px; }
+    .section { padding: 56px 48px; border-bottom: 1px solid var(--border); }
+    .section-eyebrow { font-size: 10px; font-weight: 600; color: var(--yellow); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 6px; }
+    .section-title { font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 32px; }
+    .subsection-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 80px 48px 64px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(160deg, #131310 0%, #0A0A0A 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -80px; right: -80px;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(240,185,11,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow { font-size: 10px; font-weight: 600; color: var(--yellow); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 20px; }
+    .hero-title { font-size: clamp(36px, 5vw, 64px); font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.0; margin-bottom: 20px; }
+    .hero-title span { color: var(--yellow); }
+    .hero-desc { font-size: 15px; color: var(--sec); max-width: 500px; line-height: 1.6; margin-bottom: 36px; }
+    .hero-stats { display: flex; gap: 40px; }
+    .hero-stat-n { font-size: 32px; font-weight: 800; color: var(--yellow); line-height: 1; }
+    .hero-stat-l { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+    /* ── Backgrounds grid ── */
+    .bg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .bg-card { cursor: default; transition: transform 0.2s, box-shadow 0.2s; }
+    .bg-card:hover { transform: translateY(-3px); }
+    .bg-card:hover .bg-thumb { box-shadow: 0 0 0 2px var(--yellow); }
+    .bg-thumb {
+      width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden;
+      background-size: cover; background-position: center;
+      border: 1px solid var(--border-med); transition: box-shadow 0.2s;
+    }
+    .bg-name { font-size: 12px; font-weight: 600; color: var(--white); margin-top: 8px; }
+    .bg-desc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    /* ── Badge showcase ── */
+    .badge-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .badge-group { display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── Table ── */
+    .table-wrap { border-radius: 8px; overflow: hidden; border: 1px solid var(--border-med); }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      padding: 11px 16px; font-family: var(--font); font-size: 11px; font-weight: 600;
+      color: var(--white); background: var(--th); text-align: left;
+      letter-spacing: 0.05em; border-bottom: 1px solid var(--border-med); white-space: nowrap;
+    }
+    td {
+      padding: 11px 16px; font-family: var(--font); font-size: 12px;
+      color: var(--white); border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    tr:last-child td { border-bottom: none; }
+    .row-num { color: var(--yellow); font-weight: 700; }
+    .source-row { background: var(--tr1); padding: 7px 16px; font-size: 10px; color: var(--muted); border-top: 1px solid var(--border); }
+    .icon-cell { display: flex; align-items: center; gap: 10px; }
+    .chain-icon { width: 24px; height: 24px; border-radius: 50%; background: var(--elevated); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+
+    /* ── Bento ── */
+    .bento-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .bento-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
+    .bento-full { margin-top: 12px; }
+    .bento-card {
+      background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 20px 22px;
+    }
+    .bento-label { font-size: 9px; font-weight: 400; color: var(--sec); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 8px; }
+    .bento-metric { font-weight: 700; color: var(--yellow); line-height: 1; }
+    .bento-subtitle { font-size: 12px; color: var(--sec); margin-top: 6px; line-height: 1.4; }
+
+    /* ── Chart ── */
+    .chart-card { background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 20px 22px; }
+    .chart-title { font-size: 9px; color: var(--sec); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; margin-bottom: 16px; }
+    .chart-bars { display: flex; align-items: flex-end; gap: 12px; height: 70px; }
+    .chart-item { flex: 1; display: flex; flex-direction: column; align-items: center; }
+    .chart-value { font-size: 11px; margin-bottom: 5px; }
+    .chart-bar { width: 100%; border-radius: 3px 3px 0 0; min-height: 4px; }
+    .chart-label { font-size: 10px; color: var(--sec); margin-top: 7px; text-align: center; }
+
+    /* ── Slides ── */
+    .slide-preview-wrap { margin-bottom: 24px; }
+    .slide-preview-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .slide-frame {
+      width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden;
+      position: relative; border: 1px solid var(--border-med);
+      background-size: cover; background-position: center;
+    }
+    .slide-content { position: absolute; inset: 4% 5%; display: flex; flex-direction: column; }
+    .slide-logo {
+      position: absolute; bottom: 4%; left: 3%;
+      display: flex; align-items: center; gap: 5px;
+      font-size: 8px; font-weight: 700; color: var(--white); letter-spacing: 0.06em;
+    }
+    .slide-logo-dot { width: 12px; height: 12px; background: var(--yellow); border-radius: 2px; }
+    .slide-tagline {
+      position: absolute; bottom: 4%; right: 3%;
+      font-size: 6px; color: #777; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+
+    /* ── Footer ── */
+    .footer { padding: 28px 48px; display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); }
+    .footer-dot { width: 12px; height: 12px; background: var(--yellow); border-radius: 2px; flex-shrink: 0; }
+
+    /* ── Utility ── */
+    .divider { height: 1px; background: var(--border); margin: 24px 0; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const { useState } = React;
+
+// ── Tokens ──────────────────────────────────────────────────────────────────
+const Y = '#F0B90B';
+const W = '#FFFFFF';
+const C = '#1A1A1A';
+const E = '#252525';
+const S = '#AAAAAA';
+const M = '#555555';
+const B = 'rgba(255,255,255,0.07)';
+const BM = 'rgba(255,255,255,0.13)';
+const F = "'Space Grotesk', -apple-system, sans-serif";
+
+// ── Badge ────────────────────────────────────────────────────────────────────
+const BADGE_SIZE = {
+  lg: { fontSize: '13px', padding: '6px 14px', letterSpacing: '0.05em' },
+  md: { fontSize: '11px', padding: '4px 12px', letterSpacing: '0.06em' },
+  sm: { fontSize: '10px', padding: '3px 10px', letterSpacing: '0.07em' },
+};
+const BADGE_COLOR = {
+  dark:          { background: C, color: W,    border: `1px solid ${B}` },
+  'dark-yellow': { background: C, color: Y,    border: `1px solid ${B}` },
+  outline:       { background: 'transparent', color: Y, border: `1px solid ${Y}` },
+  'fill-yellow': { background: Y, color: '#000', border: `1px solid ${Y}` },
+};
+
+const Badge = ({ children, shape = 'pill', size = 'md', color = 'dark', withDropdown = false }) => (
+  <span style={{
+    display: 'inline-flex', alignItems: 'center', position: 'relative',
+    fontFamily: F, fontWeight: 600, textTransform: 'uppercase', whiteSpace: 'nowrap',
+    borderRadius: shape === 'pill' ? '999px' : '6px',
+    ...BADGE_SIZE[size], ...BADGE_COLOR[color],
+  }}>
+    {children}
+    {withDropdown && (
+      <span style={{
+        position: 'absolute', bottom: '-8px', left: '50%', transform: 'translateX(-50%)',
+        width: 0, height: 0, borderLeft: '5px solid transparent',
+        borderRight: '5px solid transparent', borderTop: '6px solid currentColor',
+      }}/>
+    )}
+  </span>
+);
+
+// ── Network icon circles ──────────────────────────────────────────────────────
+const NETWORK_COLORS = {
+  'ETH': '#627EEA', 'BNB': '#F0B90B', 'USDC': '#2775CA', 'USDT': '#26A17B',
+  'USD1': '#4A90E2', 'BUSD': '#F0B90B', 'USDf': '#6B7280', 'FDUSD': '#1E90FF',
+};
+const NetworkDot = ({ ticker }) => (
+  <div style={{
+    width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
+    background: NETWORK_COLORS[ticker] || '#333',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: '8px', fontWeight: 700, color: ticker === 'BNB' ? '#000' : '#fff',
+  }}>
+    {ticker.slice(0,2)}
+  </div>
+);
+
+// ── DataTable ─────────────────────────────────────────────────────────────────
+const DataTable = ({ cols, rows, source }) => (
+  <div className="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style={{ width: 40 }}>#</th>
+          {cols.map(c => <th key={c.key} style={{ textAlign: c.align || 'left' }}>{c.label}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr key={row.id} style={{ background: i%2===1 ? E : '#1E1E1E' }}>
+            <td className="row-num">{row.id}</td>
+            {cols.map((col, ci) => (
+              <td key={col.key} style={{ textAlign: col.align || 'left' }}>
+                {ci === 0 && row.ticker
+                  ? <span className="icon-cell"><NetworkDot ticker={row.ticker}/>{row.cells[col.key]}</span>
+                  : row.cells[col.key]
+                }
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {source && <div className="source-row">{source}</div>}
+  </div>
+);
+
+// ── BentoCard ─────────────────────────────────────────────────────────────────
+const BentoCard = ({ label, metric, subtitle, metricSize = '52px' }) => (
+  <div className="bento-card">
+    <div className="bento-label">{label}</div>
+    <div className="bento-metric" style={{ fontSize: metricSize }}>{metric}</div>
+    {subtitle && <div className="bento-subtitle">{subtitle}</div>}
+  </div>
+);
+
+// ── BarChart ──────────────────────────────────────────────────────────────────
+const BarChart = ({ title, items }) => {
+  const max = Math.max(...items.map(i => i.value));
+  return (
+    <div className="chart-card">
+      {title && <div className="chart-title">{title}</div>}
+      <div className="chart-bars">
+        {items.map(item => (
+          <div key={item.label} className="chart-item">
+            <div className="chart-value" style={{ fontWeight: item.isBnb ? 700 : 400, color: item.isBnb ? Y : S }}>
+              {item.display}
+            </div>
+            <div className="chart-bar" style={{
+              height: `${(item.value/max)*100}%`,
+              background: item.isBnb ? Y : '#3A3A3A',
+            }}/>
+            <div className="chart-label">{item.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ── SlideFrame ─────────────────────────────────────────────────────────────────
+const SlideFrame = ({ bg, children }) => (
+  <div className="slide-frame" style={{ backgroundImage: `url('assets/backgrounds/${bg}.png')` }}>
+    <div className="slide-content">{children}</div>
+    <div className="slide-logo"><div className="slide-logo-dot"/><span><b>BNB</b> CHAIN</span></div>
+    <div className="slide-tagline">BUILD WEB3 WITH BNB CHAIN</div>
+  </div>
+);
+
+// ── Data ──────────────────────────────────────────────────────────────────────
+const stableCols = [
+  { key: 'name',     label: 'Product Name' },
+  { key: 'platform', label: 'Platform' },
+  { key: 'ticker',   label: 'Ticker' },
+  { key: 'class',    label: 'Asset Class' },
+  { key: 'value',    label: 'Total Value', align: 'right' },
+];
+const stableRows = [
+  { id:1, ticker:'USDT', cells:{ name:'Tether USDt',        platform:'Binance',      ticker:'USDT',    class:'Stablecoins', value:'$8,984,992,787' }},
+  { id:2, ticker:'USD1', cells:{ name:'USD1',                platform:'BitGo',        ticker:'USD1',    class:'Stablecoins', value:'$1,862,967,308' }},
+  { id:3, ticker:'BUSD', cells:{ name:'Binance-Peg BUSD',   platform:'Binance',      ticker:'BSC-BUSD',class:'Stablecoins', value:'$1,675,995,875' }},
+  { id:4, ticker:'USDC', cells:{ name:'USDC',                platform:'Circle',       ticker:'USDC',    class:'Stablecoins', value:'$1,288,999,880' }},
+  { id:5, ticker:'USDf', cells:{ name:'Falcon USD',          platform:'Falcon Finance',ticker:'USDf',  class:'Stablecoins', value:'$114,518,029'   }},
+  { id:6, ticker:'FDUSD',cells:{ name:'First Digital USD',   platform:'First Digital',ticker:'FDUSD',  class:'Stablecoins', value:'$88,920,169'    }},
+];
+
+const dawItems = [
+  { label:'BNB Chain',  value:4.32, display:'4.32M', isBnb:true  },
+  { label:'Solana',     value:3.23, display:'3.23M', isBnb:false },
+  { label:'NEAR',       value:3.15, display:'3.15M', isBnb:false },
+  { label:'Ethereum',   value:1.2,  display:'1.2M',  isBnb:false },
+];
+
+const BG_VARIANTS = [
+  { key:'bg-hero-geometric',   label:'Hero Geometric',   desc:'Cover / section dividers' },
+  { key:'bg-orbs-sphere',      label:'Orbs Sphere',      desc:'Sci-fi / space content' },
+  { key:'bg-isometric-bnb',    label:'Isometric BNB',    desc:'BNB product content' },
+  { key:'bg-sphere-horizon',   label:'Sphere Horizon',   desc:'Mission / vision slides' },
+  { key:'bg-defi-coins',       label:'DeFi Coins',       desc:'DeFi / ecosystem content' },
+  { key:'bg-clean-grid',       label:'Clean Grid',       desc:'Data-heavy slides' },
+  { key:'bg-scattered-shapes', label:'Scattered Shapes', desc:'Incentives / general' },
+  { key:'bg-split-panel',      label:'Split Panel',      desc:'Two-column content' },
+];
+
+// ── App ───────────────────────────────────────────────────────────────────────
+const App = () => {
+  const [hoveredBg, setHoveredBg] = useState(null);
+
+  return (
+    <div className="page">
+
+      {/* Nav */}
+      <nav className="nav">
+        <div className="nav-brand">
+          <svg width="22" height="22" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="7" fill="#F0B90B" fillOpacity="0.12"/>
+            <path d="M20 7L29 12.5V23.5L20 29L11 23.5V12.5L20 7Z" stroke="#F0B90B" strokeWidth="1.6" fill="none"/>
+            <circle cx="20" cy="18" r="3.5" fill="#F0B90B"/>
+            <path d="M20 21.5V29M11 23.5L7 25.5M29 23.5L33 25.5" stroke="#F0B90B" strokeWidth="1.6"/>
+          </svg>
+          <span>BNB</span> CHAIN
+        </div>
+        <div className="nav-sep"/>
+        <span className="nav-subtitle">Slide Design System</span>
+        <div className="nav-links">
+          {[['Backgrounds','#backgrounds'],['Badges','#badges'],['Tables','#tables'],['Bento','#bento'],['Slides','#slides']].map(([l,h]) => (
+            <a key={l} href={h}>{l}</a>
+          ))}
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <div className="hero">
+        <div className="hero-eyebrow">Official Reference · 40-Page Slide Library</div>
+        <h1 className="hero-title">BNB CHAIN<br/><span>SLIDE</span> DESIGN SYSTEM</h1>
+        <p className="hero-desc">All components, backgrounds, tokens, and patterns extracted directly from the official BNB Chain Slide Material Library.</p>
+        <div className="hero-stats">
+          {[['8','Backgrounds'],['6','Components'],['5','Token Files'],['33','Icons']].map(([n,l]) => (
+            <div key={l}><div className="hero-stat-n">{n}</div><div className="hero-stat-l">{l}</div></div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Section: Backgrounds ── */}
+      <section id="backgrounds" className="section">
+        <div className="section-eyebrow">01 / Slide Backgrounds</div>
+        <h2 className="section-title">Background Variants</h2>
+        <div className="bg-grid">
+          {BG_VARIANTS.map(bg => (
+            <div key={bg.key} className="bg-card"
+              onMouseEnter={() => setHoveredBg(bg.key)}
+              onMouseLeave={() => setHoveredBg(null)}>
+              <div className="bg-thumb" style={{
+                backgroundImage: `url('assets/backgrounds/${bg.key}.png')`,
+                boxShadow: hoveredBg === bg.key ? `0 0 0 2px ${Y}, 0 8px 24px rgba(240,185,11,0.15)` : 'none',
+              }}/>
+              <div className="bg-name">{bg.label}</div>
+              <div className="bg-desc">{bg.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Section: Badges ── */}
+      <section id="badges" className="section">
+        <div className="section-eyebrow">02 / Headers & Labels</div>
+        <h2 className="section-title">Badges & Labels</h2>
+        <div className="badge-group">
+
+          <div>
+            <div className="subsection-label">Pill shape — Large — all color variants</div>
+            <div className="badge-row">
+              <Badge shape="pill" size="lg" color="dark">About BNB Chain</Badge>
+              <Badge shape="pill" size="lg" color="dark-yellow">About BNB Chain</Badge>
+              <Badge shape="pill" size="lg" color="outline">About BNB Chain</Badge>
+              <Badge shape="pill" size="lg" color="fill-yellow">About BNB Chain</Badge>
+            </div>
+          </div>
+
+          <div>
+            <div className="subsection-label">Rectangle shape — Medium — all color variants</div>
+            <div className="badge-row">
+              <Badge shape="rect" size="md" color="dark">Content 1</Badge>
+              <Badge shape="rect" size="md" color="dark-yellow">Content 1</Badge>
+              <Badge shape="rect" size="md" color="outline">Content 1</Badge>
+              <Badge shape="rect" size="md" color="fill-yellow">Content 1</Badge>
+            </div>
+          </div>
+
+          <div>
+            <div className="subsection-label" style={{ marginBottom: 20 }}>With dropdown arrow</div>
+            <div className="badge-row">
+              <Badge shape="rect" size="md" color="dark" withDropdown>Content 1</Badge>
+              <Badge shape="rect" size="md" color="dark-yellow" withDropdown>Content 1</Badge>
+              <Badge shape="rect" size="md" color="outline" withDropdown>Content 1</Badge>
+              <Badge shape="rect" size="md" color="fill-yellow" withDropdown>Content 1</Badge>
+            </div>
+          </div>
+
+          <div>
+            <div className="subsection-label">Small — all variants</div>
+            <div className="badge-row">
+              <Badge shape="pill" size="sm" color="dark">About BNB Chain</Badge>
+              <Badge shape="pill" size="sm" color="dark-yellow">About BNB Chain</Badge>
+              <Badge shape="pill" size="sm" color="outline">About BNB Chain</Badge>
+              <Badge shape="pill" size="sm" color="fill-yellow">About BNB Chain</Badge>
+              <Badge shape="rect" size="sm" color="dark">Content 1</Badge>
+              <Badge shape="rect" size="sm" color="dark-yellow">Content 1</Badge>
+              <Badge shape="rect" size="sm" color="outline">Content 1</Badge>
+              <Badge shape="rect" size="sm" color="fill-yellow">Content 1</Badge>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── Section: Tables ── */}
+      <section id="tables" className="section">
+        <div className="section-eyebrow">03 / Tables</div>
+        <h2 className="section-title">Data Tables</h2>
+        <div className="subsection-label">5-column ranked table with token icons</div>
+        <DataTable
+          cols={stableCols}
+          rows={stableRows}
+          source="Source: rwa.xyz (Data accurate as of 20th March 2026)"
+        />
+      </section>
+
+      {/* ── Section: Bento ── */}
+      <section id="bento" className="section">
+        <div className="section-eyebrow">04 / Bento Info Containers</div>
+        <h2 className="section-title">Stat Cards & Charts</h2>
+
+        <div className="subsection-label">4-up — compact metric cards</div>
+        <div className="bento-grid-4">
+          <BentoCard label="Stablecoin Market Cap"      metric="$14.22B" metricSize="44px"/>
+          <BentoCard label="Stablecoin Holders"         metric="58.27M"  metricSize="44px"/>
+          <BentoCard label="30D Transfer Volume"        metric="$333.69B" metricSize="44px"/>
+          <BentoCard label="% Global Stablecoin Txn"   metric="40%"     metricSize="44px"/>
+        </div>
+
+        <div className="bento-grid-2">
+          <BentoCard
+            label="Chain TVL"
+            metric="$5.9B"
+            metricSize="56px"
+            subtitle="BNB Chain has quietly become the most active retail blockchain by daily users — deep stablecoin liquidity, hungry yield-seekers, DeFi-native infrastructure."
+          />
+          <BarChart
+            title="Daily Active Wallets — Chain Comparison (Q3 2025, Messari / CryptoRank)"
+            items={dawItems}
+          />
+        </div>
+
+        <div className="bento-full">
+          <BentoCard
+            label="Daily Active Users · #1 Across All Chains (Q3 2025)"
+            metric="4.32M"
+            metricSize="72px"
+            subtitle="BNB Chain leads all blockchains in daily active wallets. Its retail-dominant user base is defined by high transaction frequency, stablecoin usage, and active DeFi participation. BNB leads Solana (3.23M) and Ethereum (1.2M)."
+          />
+        </div>
+      </section>
+
+      {/* ── Section: Slide Examples ── */}
+      <section id="slides" className="section">
+        <div className="section-eyebrow">05 / Slide Examples</div>
+        <h2 className="section-title">Full Slide Compositions</h2>
+
+        {/* Cover */}
+        <div className="slide-preview-wrap">
+          <div className="slide-preview-label">Cover slide — bg-hero-geometric</div>
+          <SlideFrame bg="bg-hero-geometric">
+            <div style={{ marginTop: 'auto', paddingBottom: '3%' }}>
+              <div style={{ marginBottom: 10 }}>
+                <Badge shape="pill" size="sm" color="dark-yellow">BNB Chain · 2026</Badge>
+              </div>
+              <div style={{ fontSize:'clamp(24px,4.5vw,44px)', fontWeight:800, color:Y, textTransform:'uppercase', lineHeight:1, marginBottom:6 }}>
+                BUILD WEB3
+              </div>
+              <div style={{ fontSize:'clamp(24px,4.5vw,44px)', fontWeight:800, color:W, textTransform:'uppercase', lineHeight:1 }}>
+                ON BNB CHAIN
+              </div>
+            </div>
+          </SlideFrame>
+        </div>
+
+        {/* Mission */}
+        <div className="slide-preview-wrap">
+          <div className="slide-preview-label">Mission / Vision — bg-sphere-horizon</div>
+          <SlideFrame bg="bg-sphere-horizon">
+            <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'100%', gap:20, textAlign:'center' }}>
+              <div>
+                <Badge shape="pill" size="sm" color="dark-yellow">Our Mission</Badge>
+                <div style={{ fontSize:'clamp(13px,2vw,18px)', fontWeight:600, color:W, marginTop:10, lineHeight:1.4 }}>
+                  Onboard the <span style={{color:Y}}>next billion</span> Web3 users.
+                </div>
+              </div>
+              <div style={{ width:1, height:24, background:'rgba(255,255,255,0.15)' }}/>
+              <div>
+                <Badge shape="pill" size="sm" color="dark-yellow">Our Vision</Badge>
+                <div style={{ fontSize:'clamp(13px,2vw,18px)', fontWeight:600, color:W, marginTop:10, lineHeight:1.4 }}>
+                  Help <span style={{color:Y}}>startups and developers</span> achieve<br/>real business and cross the chasm.
+                </div>
+              </div>
+            </div>
+          </SlideFrame>
+        </div>
+
+        {/* DeFi stats */}
+        <div className="slide-preview-wrap">
+          <div className="slide-preview-label">DeFi stats — bg-isometric-bnb</div>
+          <SlideFrame bg="bg-isometric-bnb">
+            <div>
+              <Badge shape="rect" size="sm" color="dark-yellow">DeFi</Badge>
+              <div style={{ fontSize:'clamp(16px,2.8vw,26px)', fontWeight:800, color:Y, textTransform:'uppercase', marginTop:12, marginBottom:4 }}>
+                4.32M Daily Active Users
+              </div>
+              <div style={{ fontSize:'clamp(9px,1.3vw,12px)', color:S, maxWidth:'52%', lineHeight:1.5, marginBottom:16 }}>
+                BNB Chain leads all blockchains in daily active wallets. Retail-dominant. Yield farmers, LPs and leveraged traders.
+              </div>
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:8, maxWidth:'52%' }}>
+                {[['Chain TVL','$5.9B'],['Stablecoin Cap','$14.22B'],['30D Transfer Vol.','$333.69B'],['% Global Txn','40%']].map(([l,v]) => (
+                  <div key={l} style={{ background:'rgba(20,20,20,0.88)', borderRadius:6, padding:'9px 12px', border:`1px solid ${B}` }}>
+                    <div style={{ fontSize:'clamp(7px,0.9vw,9px)', color:S, textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:4 }}>{l}</div>
+                    <div style={{ fontSize:'clamp(14px,2vw,20px)', fontWeight:700, color:Y }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </SlideFrame>
+        </div>
+
+        {/* Section divider example */}
+        <div className="slide-preview-wrap">
+          <div className="slide-preview-label">Section divider — bg-scattered-shapes</div>
+          <SlideFrame bg="bg-scattered-shapes">
+            <div style={{ marginTop:'auto', paddingBottom:'6%' }}>
+              <div style={{ fontSize:'clamp(28px,5vw,48px)', fontWeight:800, color:Y, textTransform:'uppercase', lineHeight:1 }}>ECOSYSTEM</div>
+              <div style={{ fontSize:'clamp(28px,5vw,48px)', fontWeight:800, color:W, textTransform:'uppercase', lineHeight:1 }}>INCENTIVES</div>
+            </div>
+          </SlideFrame>
+        </div>
+
+      </section>
+
+      {/* Footer */}
+      <div className="footer">
+        <div className="footer-dot"/>
+        <span style={{ fontSize:12, fontWeight:700, letterSpacing:'0.06em' }}>BNB CHAIN</span>
+        <span style={{ fontSize:12, color:M }}>— Slide Design System · Source: Slides Material Library PDF · {new Date().getFullYear()}</span>
+      </div>
+
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
