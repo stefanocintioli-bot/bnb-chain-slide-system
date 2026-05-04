@@ -36,6 +36,7 @@ const labelStyle: React.CSSProperties = {
   color: colors.textSecondary,
   textTransform: 'uppercase',
   letterSpacing: letterSpacing.widest,
+  textAlign: 'center',
   marginBottom: 8,
 };
 
@@ -74,7 +75,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
   return (
     <div
       style={{
-        backgroundColor: colors.cardBg,
+        backgroundColor: colors.elevatedBg,
         borderRadius: 12,
         border: `1px solid ${colors.borderSubtle}`,
         padding: paddingMap[variant],
@@ -91,6 +92,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
           color: colors.bnbYellow,
           margin: 0,
           fontFamily: fontFamily.base,
+          textAlign: 'center',
         }}
       >
         {metric}
@@ -100,11 +102,12 @@ export const BentoCard: React.FC<BentoCardProps> = ({
         <p
           style={{
             fontSize: '14px',
-            color: colors.textSecondary,
+            color: colors.textPrimary,
             fontWeight: fontWeight.regular,
             margin: 0,
             marginTop: 4,
             lineHeight: lineHeight.snug,
+            textAlign: 'center',
           }}
         >
           {subtitle}
@@ -115,11 +118,12 @@ export const BentoCard: React.FC<BentoCardProps> = ({
         <p
           style={{
             fontSize: fontSize.body,
-            color: colors.textSecondary,
+            color: colors.textPrimary,
             fontWeight: fontWeight.regular,
             margin: 0,
             marginTop: 12,
             lineHeight: lineHeight.normal,
+            textAlign: 'center',
           }}
         >
           {description}

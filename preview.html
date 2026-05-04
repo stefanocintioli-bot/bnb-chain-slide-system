@@ -119,11 +119,20 @@
     .bento-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
     .bento-full { margin-top: 12px; }
     .bento-card {
-      background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 20px 22px;
+      background: var(--elevated); border-radius: 12px; border: 1px solid var(--border); padding: 20px 22px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
     }
-    .bento-label { font-size: 9px; font-weight: 400; color: var(--sec); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 8px; }
-    .bento-metric { font-weight: 700; color: var(--yellow); line-height: 1; }
-    .bento-subtitle { font-size: 12px; color: var(--sec); margin-top: 6px; line-height: 1.4; }
+    .bento-label { font-size: 9px; font-weight: 400; color: var(--sec); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 8px; text-align: center; }
+    .bento-metric { font-weight: 700; color: var(--yellow); line-height: 1; text-align: center; }
+    .bento-subtitle { font-size: 12px; color: var(--white); margin-top: 6px; line-height: 1.4; text-align: center; }
+
+    /* ── Color swatches ── */
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .color-swatch { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    .color-swatch-block { height: 48px; width: 100%; }
+    .color-swatch-info { padding: 8px 10px; background: var(--card); }
+    .color-swatch-name { font-size: 10px; font-weight: 600; color: var(--white); }
+    .color-swatch-hex { font-size: 9px; color: var(--muted); margin-top: 2px; font-family: monospace; }
 
     /* ── Chart ── */
     .chart-card { background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 20px 22px; }
@@ -277,8 +286,8 @@ const DataTable = ({ cols, rows, source }) => (
 const BentoCard = ({ label, metric, subtitle, metricSize = '52px' }) => (
   <div className="bento-card">
     <div className="bento-label">{label}</div>
-    <div className="bento-metric" style={{ fontSize: metricSize }}>{metric}</div>
-    {subtitle && <div className="bento-subtitle">{subtitle}</div>}
+    <div className="bento-metric" style={{ fontSize: metricSize, textAlign: 'center' }}>{metric}</div>
+    {subtitle && <div className="bento-subtitle" style={{ textAlign: 'center', color: '#FFFFFF' }}>{subtitle}</div>}
   </div>
 );
 
@@ -371,7 +380,7 @@ const App = () => {
         <div className="nav-sep"/>
         <span className="nav-subtitle">Slide Design System</span>
         <div className="nav-links">
-          {[['Backgrounds','#backgrounds'],['Badges','#badges'],['Tables','#tables'],['Bento','#bento'],['Slides','#slides'],['Icons','#icons'],['Products','#products']].map(([l,h]) => (
+          {[['Backgrounds','#backgrounds'],['Badges','#badges'],['Tables','#tables'],['Bento','#bento'],['Slides','#slides'],['Icons','#icons'],['Products','#products'],['Colors','#colors']].map(([l,h]) => (
             <a key={l} href={h}>{l}</a>
           ))}
         </div>
@@ -597,385 +606,625 @@ const App = () => {
         <div className="section-eyebrow">06 / Icon Library</div>
         <h2 className="section-title">45 Icons — Two Styles</h2>
 
-        <div className="subsection-label" style={{marginBottom:20}}>Style A — Circuit / Tech (dashed rings, compass dots, circuit traces)</div>
-        <div className="icon-grid" style={{marginBottom:32}}>
-          {[
-            ['Development',       'dev'],
-            ['On-chain AI Agents','ocaa'],
-            ['Low Latency',       'll'],
-            ['Staking',           'stk'],
-            ['DeFi Strategies',   'defi'],
-            ['Trading',           'trd'],
-            ['AI-First Blockchain','aifb'],
-            ['Issue Tokens',      'it'],
-            ['Smart Contracts',   'sc'],
-            ['Batch Processing',  'bp'],
-            ['MEV',               'mev'],
-            ['Developer Tools',   'dt'],
-          ].map(([name, id]) => (
-            <div key={id} className="icon-item">
-              <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
+        {/* Shared Style A base renderer */}
+        {(() => {
+          const IconA = ({ id, children, label }) => (
+            <div className="icon-item">
+              <svg width="72" height="72" viewBox="0 0 80 80" fill="none">
                 <defs>
-                  <linearGradient id={`prev-${id}-bg`} x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#222222"/>
-                    <stop offset="100%" stopColor="#141414"/>
+                  <linearGradient id={`ia-${id}-bg`} x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#222"/>
+                    <stop offset="100%" stopColor="#0E0E0E"/>
                   </linearGradient>
                 </defs>
-                <rect width="80" height="80" rx="18" fill={`url(#prev-${id}-bg)`}/>
-                <rect width="80" height="80" rx="18" stroke="rgba(255,255,255,0.07)" strokeWidth="1" fill="none"/>
-                {id === 'dev' && <>
-                  <circle cx="40" cy="40" r="28" stroke="#F0B90B" strokeWidth="1.5" strokeDasharray="3 5" fill="none"/>
-                  <circle cx="40" cy="12" r="2.5" fill="#F0B90B"/><circle cx="68" cy="40" r="2.5" fill="#F0B90B"/>
-                  <circle cx="40" cy="68" r="2.5" fill="#F0B90B"/><circle cx="12" cy="40" r="2.5" fill="#F0B90B"/>
-                  <polyline points="26,32 20,40 26,48" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <line x1="34" y1="48" x2="46" y2="32" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round"/>
-                  <polyline points="54,32 60,40 54,48" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                </>}
-                {id === 'ocaa' && <>
-                  <circle cx="40" cy="40" r="28" stroke="#F0B90B" strokeWidth="1.5" strokeDasharray="2 4" fill="none"/>
-                  <polygon points="40,24 53,31.5 53,46.5 40,54 27,46.5 27,31.5" stroke="#F0B90B" strokeWidth="1.5" fill="#2A2A2A"/>
+                {/* Base */}
+                <rect width="80" height="80" rx="14" fill={`url(#ia-${id}-bg)`}/>
+                <rect x="1" y="1" width="78" height="78" rx="13" stroke="#2A2A2A" strokeWidth="2" fill="none"/>
+                <rect x="3" y="3" width="74" height="74" rx="12" stroke="#181818" strokeWidth="1" fill="none"/>
+                {/* Circuit traces — TL */}
+                <polyline points="6,18 6,6 18,6" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <circle cx="6" cy="6" r="2" fill="#F0B90B"/>
+                <circle cx="6" cy="18" r="1.5" fill="#F0B90B"/>
+                <circle cx="18" cy="6" r="1.5" fill="#F0B90B"/>
+                {/* TR */}
+                <polyline points="74,18 74,6 62,6" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <circle cx="74" cy="6" r="2" fill="#F0B90B"/>
+                <circle cx="74" cy="18" r="1.5" fill="#F0B90B"/>
+                <circle cx="62" cy="6" r="1.5" fill="#F0B90B"/>
+                {/* BL */}
+                <polyline points="6,62 6,74 18,74" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <circle cx="6" cy="74" r="2" fill="#F0B90B"/>
+                <circle cx="6" cy="62" r="1.5" fill="#F0B90B"/>
+                <circle cx="18" cy="74" r="1.5" fill="#F0B90B"/>
+                {/* BR */}
+                <polyline points="74,62 74,74 62,74" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <circle cx="74" cy="74" r="2" fill="#F0B90B"/>
+                <circle cx="74" cy="62" r="1.5" fill="#F0B90B"/>
+                <circle cx="62" cy="74" r="1.5" fill="#F0B90B"/>
+                {/* Dashed outer circle */}
+                <circle cx="40" cy="40" r="28" stroke="#F0B90B" strokeWidth="1.2" strokeDasharray="5 4" fill="none"/>
+                {/* Inner platform */}
+                <circle cx="40" cy="40" r="20" fill="#141414" stroke="#F0B90B" strokeWidth="2"/>
+                {/* Icon symbol */}
+                {children}
+              </svg>
+              <span className="icon-name">{label}</span>
+              <span className="icon-style-badge" style={{background:'rgba(240,185,11,0.1)',color:Y,fontSize:'8px',padding:'2px 6px',borderRadius:'999px',fontWeight:600,letterSpacing:'0.06em'}}>TECH</span>
+            </div>
+          );
+
+          const IconB = ({ id, children, label }) => (
+            <div className="icon-item">
+              <svg width="72" height="72" viewBox="0 0 80 80" fill="none">
+                <defs>
+                  <linearGradient id={`ib-${id}-yl`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#F5CC3C"/>
+                    <stop offset="100%" stopColor="#C89A09"/>
+                  </linearGradient>
+                  <radialGradient id={`ib-${id}-yr`} cx="40%" cy="35%" r="60%">
+                    <stop offset="0%" stopColor="#F5CC3C"/>
+                    <stop offset="100%" stopColor="#C89A09"/>
+                  </radialGradient>
+                  <linearGradient id={`ib-${id}-dk`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#2A2A2A"/>
+                    <stop offset="100%" stopColor="#111"/>
+                  </linearGradient>
+                </defs>
+                {children}
+              </svg>
+              <span className="icon-name">{label}</span>
+              <span className="icon-style-badge" style={{background:'rgba(255,255,255,0.05)',color:S,fontSize:'8px',padding:'2px 6px',borderRadius:'999px',fontWeight:600,letterSpacing:'0.06em'}}>ILLUS</span>
+            </div>
+          );
+
+          return (
+            <>
+              <div className="subsection-label" style={{marginBottom:16}}>Style A — Circuit / Tech — shared circuit-trace container with inner symbol</div>
+              <div className="icon-grid" style={{marginBottom:36}}>
+
+                <IconA id="dev" label="Development">
+                  <polyline points="32,34 27,40 32,46" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  <line x1="36" y1="46" x2="44" y2="34" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
+                  <polyline points="48,34 53,40 48,46" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </IconA>
+
+                <IconA id="ocaa" label="On-chain AI Agents">
+                  <polygon points="40,25 49,30 49,40 40,45 31,40 31,30" stroke="#F0B90B" strokeWidth="1.2" fill="#1A1A1A"/>
+                  <polygon points="40,29 45,32 40,35 35,32" fill="#F5CC3C"/>
+                  <polygon points="35,32 40,35 40,41 35,38" fill="#F0B90B"/>
+                  <polygon points="45,32 40,35 40,41 45,38" fill="#C89A09"/>
+                  <line x1="40" y1="12" x2="40" y2="25" stroke="#F0B90B" strokeWidth="0.8" opacity="0.5"/>
+                  <line x1="68" y1="40" x2="49" y2="40" stroke="#F0B90B" strokeWidth="0.8" opacity="0.5"/>
+                  <line x1="40" y1="68" x2="40" y2="45" stroke="#F0B90B" strokeWidth="0.8" opacity="0.5"/>
+                  <line x1="12" y1="40" x2="31" y2="40" stroke="#F0B90B" strokeWidth="0.8" opacity="0.5"/>
+                </IconA>
+
+                <IconA id="ll" label="Low Latency">
+                  <path d="M 24 54 A 18 18 0 1 1 56 54" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+                  <line x1="22" y1="40" x2="25" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="40" y1="22" x2="40" y2="25" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="58" y1="40" x2="55" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
+                  <polygon points="42,27 37,38 40,38 38,52 43,40 40,40" fill="#F0B90B"/>
+                  <circle cx="52" cy="28" r="2.5" fill="#F0B90B"/>
+                </IconA>
+
+                <IconA id="stk" label="Staking">
+                  <circle cx="40" cy="40" r="16" fill="#F0B90B"/>
+                  <circle cx="40" cy="40" r="11" fill="#C89A09"/>
+                  <line x1="40" y1="27" x2="40" y2="31" stroke="#141414" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="40" y1="49" x2="40" y2="53" stroke="#141414" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M 44.5 30 C 44.5 28 35.5 28 35.5 32 C 35.5 36 44.5 36 44.5 40 C 44.5 44 35.5 44 35.5 42" stroke="#141414" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                </IconA>
+
+                <IconA id="defi" label="DeFi Strategies">
+                  <rect x="33" y="27" width="14" height="6" rx="1" fill="#F0B90B"/>
+                  <rect x="33" y="27" width="2" height="6" fill="#C89A09"/>
+                  <rect x="45" y="27" width="2" height="6" fill="#C89A09"/>
+                  <rect x="34" y="30" width="12" height="18" rx="1" fill="#F0B90B"/>
+                  <rect x="35" y="31" width="2" height="16" fill="none" stroke="#C89A09" strokeWidth="0.5"/>
+                  <rect x="43" y="31" width="2" height="16" fill="none" stroke="#C89A09" strokeWidth="0.5"/>
+                  <rect x="36" y="45" width="8" height="3" rx="1" fill="#C89A09"/>
+                  <path d="M 37 31 L 37 44 M 40 31 L 40 44 M 43 31 L 43 44" stroke="#141414" strokeWidth="0.5" opacity="0.4"/>
+                </IconA>
+
+                <IconA id="trd" label="Trading">
+                  <rect x="28" y="38" width="5" height="10" rx="1" fill="#F0B90B"/>
+                  <line x1="30.5" y1="33" x2="30.5" y2="38" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <line x1="30.5" y1="48" x2="30.5" y2="52" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <rect x="37" y="32" width="6" height="14" rx="1" fill="none" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <line x1="40" y1="27" x2="40" y2="32" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <line x1="40" y1="46" x2="40" y2="52" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <rect x="47" y="35" width="5" height="8" rx="1" fill="#F0B90B"/>
+                  <line x1="49.5" y1="28" x2="49.5" y2="35" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <line x1="49.5" y1="43" x2="49.5" y2="52" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <polyline points="26,46 30.5,38 40,44 49.5,32 54,36" stroke="#F0B90B" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.7"/>
+                </IconA>
+
+                <IconA id="aifb" label="AI-First Blockchain">
+                  <polygon points="40,24 50,30 50,42 40,48 30,42 30,30" stroke="#F0B90B" strokeWidth="1.5" fill="#1A1A1A"/>
                   <polygon points="40,28 47,32 40,36 33,32" fill="#F5CC3C"/>
                   <polygon points="33,32 40,36 40,44 33,40" fill="#F0B90B"/>
                   <polygon points="47,32 40,36 40,44 47,40" fill="#C89A09"/>
-                  <circle cx="40" cy="22" r="2" fill="#F0B90B"/><circle cx="58" cy="40" r="2" fill="#F0B90B"/>
-                  <circle cx="40" cy="58" r="2" fill="#F0B90B"/><circle cx="22" cy="40" r="2" fill="#F0B90B"/>
-                </>}
-                {id === 'll' && <>
-                  <path d="M 21.1 58.9 A 26 26 0 1 1 58.9 58.9" stroke="#F0B90B" strokeWidth="3" strokeLinecap="round" fill="none"/>
-                  <line x1="14" y1="40" x2="18" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="40" y1="14" x2="40" y2="18" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="66" y1="40" x2="62" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <polygon points="43,24 35,42 40,42 37,56 45,38 40,38" fill="#F0B90B"/>
-                  <circle cx="58.5" cy="21.5" r="2.5" fill="#F0B90B"/>
-                </>}
-                {id === 'stk' && <>
-                  <circle cx="40" cy="40" r="34" stroke="#F0B90B" strokeWidth="1" strokeDasharray="2 4" fill="none"/>
-                  <circle cx="40" cy="40" r="26" fill="#F0B90B"/>
-                  <circle cx="40" cy="40" r="20" fill="#C89A09"/>
-                  <line x1="40" y1="26" x2="40" y2="30" stroke="#1A1A1A" strokeWidth="2.5" strokeLinecap="round"/>
-                  <line x1="40" y1="50" x2="40" y2="54" stroke="#1A1A1A" strokeWidth="2.5" strokeLinecap="round"/>
-                  <path d="M 46 31 C 46 28.5 34 28.5 34 33 C 34 37.5 46 37.5 46 42 C 46 46.5 34 46.5 34 44" stroke="#1A1A1A" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-                </>}
-                {id === 'defi' && <>
-                  <rect x="22" y="22" width="36" height="36" rx="4" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="14" y1="29" x2="22" y2="29" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="14" y1="40" x2="22" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="14" y1="51" x2="22" y2="51" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="58" y1="29" x2="66" y2="29" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="58" y1="40" x2="66" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="58" y1="51" x2="66" y2="51" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <rect x="28" y="46" width="7" height="10" rx="1" fill="#F0B90B"/>
-                  <rect x="37" y="40" width="7" height="16" rx="1" fill="#F0B90B"/>
-                  <rect x="46" y="44" width="7" height="12" rx="1" fill="#F0B90B"/>
-                </>}
-                {id === 'trd' && <>
-                  <line x1="26" y1="24" x2="26" y2="56" stroke="#F0B90B" strokeWidth="1"/>
-                  <rect x="22" y="34" width="8" height="14" rx="1" fill="#F0B90B"/>
-                  <line x1="40" y1="20" x2="40" y2="52" stroke="#F0B90B" strokeWidth="1"/>
-                  <rect x="36" y="28" width="8" height="16" rx="1" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1"/>
-                  <line x1="54" y1="22" x2="54" y2="58" stroke="#F0B90B" strokeWidth="1"/>
-                  <rect x="50" y="38" width="8" height="12" rx="1" fill="#F0B90B"/>
-                  <polyline points="16,52 26,42 36,48 50,30 66,26" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                </>}
-                {id === 'aifb' && <>
-                  <circle cx="40" cy="40" r="26" stroke="#F0B90B" strokeWidth="1.5" strokeDasharray="4 4" fill="none"/>
-                  <polygon points="40,20 52,30 52,50 40,60 28,50 28,30" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="34" y1="35" x2="46" y2="35" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="34" y1="40" x2="46" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="34" y1="45" x2="42" y2="45" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <circle cx="40" cy="40" r="3" fill="#F0B90B"/>
-                </>}
-                {id === 'it' && <>
-                  <circle cx="40" cy="40" r="26" stroke="#F0B90B" strokeWidth="1" strokeDasharray="3 5" fill="none"/>
-                  <rect x="28" y="22" width="24" height="16" rx="3" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="34" y1="28" x2="46" y2="28" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="34" y1="32" x2="42" y2="32" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="40" y1="38" x2="40" y2="46" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <circle cx="40" cy="50" r="8" fill="#F0B90B"/>
-                  <text x="40" y="54" textAnchor="middle" fill="#1A1A1A" fontSize="8" fontWeight="800">T</text>
-                </>}
-                {id === 'sc' && <>
-                  <rect x="18" y="18" width="44" height="44" rx="8" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <circle cx="40" cy="34" r="8" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="36" y1="34" x2="44" y2="34" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="40" y1="30" x2="40" y2="38" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="26" y1="48" x2="54" y2="48" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="26" y1="54" x2="46" y2="54" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                </>}
-                {id === 'bp' && <>
-                  <rect x="14" y="26" width="16" height="10" rx="2" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.2"/>
-                  <rect x="14" y="40" width="16" height="10" rx="2" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.2"/>
-                  <rect x="14" y="54" width="16" height="10" rx="2" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.2"/>
-                  <line x1="30" y1="31" x2="40" y2="40" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round"/>
-                  <line x1="30" y1="45" x2="40" y2="40" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round"/>
-                  <line x1="30" y1="59" x2="40" y2="40" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round"/>
-                  <rect x="40" y="32" width="26" height="16" rx="3" fill="#F0B90B"/>
-                  <text x="53" y="44" textAnchor="middle" fill="#1A1A1A" fontSize="7" fontWeight="800">BATCH</text>
-                </>}
-                {id === 'mev' && <>
-                  <circle cx="40" cy="40" r="28" stroke="#F0B90B" strokeWidth="1.5" fill="none"/>
-                  <polyline points="22,50 32,30 40,42 48,26 58,38" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <circle cx="22" cy="50" r="2.5" fill="#F0B90B"/>
-                  <circle cx="58" cy="38" r="2.5" fill="#F0B90B"/>
-                  <polygon points="58,26 66,32 58,38 50,32" fill="#F0B90B" opacity="0.6"/>
-                </>}
-                {id === 'dt' && <>
-                  <rect x="16" y="20" width="48" height="40" rx="5" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="16" y1="30" x2="64" y2="30" stroke="#F0B90B" strokeWidth="1"/>
-                  <circle cx="22" cy="25" r="2" fill="#F0B90B" opacity="0.6"/>
-                  <circle cx="28" cy="25" r="2" fill="#F0B90B" opacity="0.4"/>
-                  <circle cx="34" cy="25" r="2" fill="#F0B90B" opacity="0.2"/>
-                  <line x1="24" y1="38" x2="56" y2="38" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="24" y1="44" x2="48" y2="44" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="24" y1="50" x2="52" y2="50" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="32" y1="60" x2="32" y2="66" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="48" y1="60" x2="48" y2="66" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="26" y1="66" x2="54" y2="66" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                </>}
-              </svg>
-              <span className="icon-name">{name}</span>
-              <span className="icon-style-badge" style={{background:'rgba(240,185,11,0.1)',color:Y}}>Tech</span>
-            </div>
-          ))}
-        </div>
+                  <circle cx="40" cy="12" r="1.8" fill="#F0B90B"/>
+                  <circle cx="68" cy="40" r="1.8" fill="#F0B90B"/>
+                  <circle cx="40" cy="68" r="1.8" fill="#F0B90B"/>
+                  <circle cx="12" cy="40" r="1.8" fill="#F0B90B"/>
+                </IconA>
 
-        <div className="subsection-label" style={{marginBottom:20}}>Style B — Illustrated / Geometric (bold shapes, solid fills, yellow/colored elements)</div>
-        <div className="icon-grid">
-          {[
-            ['Transaction Costs',   'tc'],
-            ['Total Value Locked',  'tvl'],
-            ['Buy',                 'buy'],
-            ['Smart Wallets',       'sw'],
-            ['User Experience',     'ux'],
-            ['One BNB',             'onebnb'],
-            ['Voting',              'vote'],
-            ['Pay',                 'pay'],
-            ['Daily Active Users',  'dau'],
-            ['On-chain Gaming',     'game'],
-            ['Stablecoins',         'stable'],
-            ['Memecoins Surge',     'meme'],
-            ['Privacy',             'priv'],
-            ['Earn',                'earn'],
-            ['Open Source',         'oss'],
-            ['Travel',              'travel'],
-            ['BNB Greenfield',      'gf'],
-            ['Governance',          'gov'],
-            ['NFT Ecosystem',       'nft'],
-            ['Scalable Low Fees',   'slf'],
-            ['Lend',                'lend'],
-            ['Proposal',            'prop'],
-            ['Gas Fees',            'gas'],
-            ['Temperature Check',   'temp'],
-          ].map(([name, id]) => (
-            <div key={id} className="icon-item">
-              <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
-                <defs>
-                  <linearGradient id={`prev-b-${id}-bg`} x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#222222"/>
-                    <stop offset="100%" stopColor="#141414"/>
-                  </linearGradient>
-                </defs>
-                <rect width="80" height="80" rx="18" fill={`url(#prev-b-${id}-bg)`}/>
-                <rect width="80" height="80" rx="18" stroke="rgba(255,255,255,0.07)" strokeWidth="1" fill="none"/>
-                {id === 'tc' && <>
-                  <circle cx="40" cy="36" r="18" fill="#F0B90B"/>
-                  <circle cx="40" cy="36" r="13" fill="#C89A09"/>
-                  <line x1="40" y1="22" x2="40" y2="26" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="40" y1="46" x2="40" y2="50" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M 45 27 C 45 25 35 25 35 29 C 35 33 45 33 45 37 C 45 41 35 41 35 39" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                  <line x1="22" y1="58" x2="58" y2="58" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="26" y1="64" x2="54" y2="64" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
-                </>}
-                {id === 'tvl' && <>
-                  <rect x="16" y="44" width="14" height="20" rx="2" fill="#3A3A3A"/>
-                  <rect x="33" y="34" width="14" height="30" rx="2" fill="#F0B90B"/>
-                  <rect x="50" y="24" width="14" height="40" rx="2" fill="#3A3A3A"/>
-                  <polyline points="16,52 33,40 50,30 64,22" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.5"/>
-                  <polygon points="62,16 68,22 62,22 62,16" fill="#F0B90B"/>
-                </>}
-                {id === 'buy' && <>
-                  <rect x="18" y="30" width="44" height="34" rx="4" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <path d="M 28 30 L 28 24 Q 40 16 52 24 L 52 30" stroke="#F0B90B" strokeWidth="2" fill="none"/>
-                  <circle cx="30" cy="44" r="5" fill="#F0B90B"/>
-                  <circle cx="50" cy="44" r="5" fill="#F0B90B"/>
-                  <line x1="30" y1="57" x2="50" y2="57" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                </>}
-                {id === 'sw' && <>
-                  <rect x="14" y="26" width="52" height="36" rx="8" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <circle cx="34" cy="44" r="8" fill="#F0B90B"/>
-                  <circle cx="52" cy="44" r="6" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="49" y1="41" x2="55" y2="47" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="55" y1="41" x2="49" y2="47" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="22" y1="32" x2="44" y2="32" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                </>}
-                {id === 'ux' && <>
-                  <circle cx="40" cy="36" r="20" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <circle cx="40" cy="32" r="7" fill="#F0B90B"/>
-                  <path d="M 26 48 Q 32 42 40 42 Q 48 42 54 48" stroke="#F0B90B" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                  <line x1="30" y1="60" x2="50" y2="60" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="40" y1="56" x2="40" y2="64" stroke="#F0B90B" strokeWidth="1.5"/>
-                </>}
-                {id === 'onebnb' && <>
-                  <circle cx="40" cy="40" r="26" stroke="#F0B90B" strokeWidth="1" strokeDasharray="3 4" fill="none"/>
-                  <polygon points="40,22 50,32 40,42 30,32" fill="#F5CC3C"/>
-                  <polygon points="30,32 40,42 40,52 30,42" fill="#F0B90B"/>
-                  <polygon points="50,32 40,42 40,52 50,42" fill="#C89A09"/>
-                  <circle cx="40" cy="20" r="2.5" fill="#F0B90B"/>
-                  <circle cx="60" cy="40" r="2.5" fill="#F0B90B"/>
-                  <circle cx="40" cy="60" r="2.5" fill="#F0B90B"/>
-                  <circle cx="20" cy="40" r="2.5" fill="#F0B90B"/>
-                </>}
-                {id === 'vote' && <>
-                  <rect x="18" y="18" width="44" height="34" rx="4" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <polyline points="26,35 33,42 54,28" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <line x1="32" y1="52" x2="32" y2="64" stroke="#F0B90B" strokeWidth="2"/>
-                  <line x1="48" y1="52" x2="48" y2="64" stroke="#F0B90B" strokeWidth="2"/>
-                  <line x1="26" y1="64" x2="54" y2="64" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                </>}
-                {id === 'pay' && <>
-                  <rect x="12" y="24" width="56" height="36" rx="6" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="12" y1="34" x2="68" y2="34" stroke="#F0B90B" strokeWidth="2"/>
-                  <rect x="20" y="44" width="16" height="8" rx="2" fill="#F0B90B"/>
-                  <rect x="44" y="44" width="8" height="8" rx="2" fill="#3A3A3A"/>
-                  <rect x="54" y="44" width="8" height="8" rx="2" fill="#3A3A3A"/>
-                </>}
-                {id === 'dau' && <>
-                  <circle cx="28" cy="30" r="10" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <circle cx="52" cy="30" r="10" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <circle cx="40" cy="48" r="10" fill="#F0B90B"/>
-                  <text x="40" y="52" textAnchor="middle" fill="#1A1A1A" fontSize="8" fontWeight="800">4M</text>
-                  <line x1="28" y1="20" x2="28" y2="14" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="52" y1="20" x2="52" y2="14" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="24" y1="14" x2="56" y2="14" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                </>}
-                {id === 'game' && <>
-                  <rect x="14" y="24" width="52" height="34" rx="8" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="28" y1="34" x2="28" y2="46" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="22" y1="40" x2="34" y2="40" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <circle cx="52" cy="37" r="3" fill="#F0B90B"/>
-                  <circle cx="58" cy="43" r="3" fill="#F0B90B"/>
-                  <circle cx="46" cy="43" r="3" fill="#F0B90B"/>
-                  <line x1="26" y1="58" x2="32" y2="66" stroke="#F0B90B" strokeWidth="2"/>
-                  <line x1="54" y1="58" x2="48" y2="66" stroke="#F0B90B" strokeWidth="2"/>
-                </>}
-                {id === 'stable' && <>
-                  <circle cx="40" cy="38" r="22" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <text x="40" y="35" textAnchor="middle" fill="#F0B90B" fontSize="11" fontWeight="800">USD</text>
-                  <line x1="40" y1="24" x2="40" y2="28" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="40" y1="48" x2="40" y2="52" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="24" y1="60" x2="56" y2="60" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
-                </>}
-                {id === 'meme' && <>
-                  <polygon points="40,14 52,30 68,28 58,44 64,62 40,54 16,62 22,44 12,28 28,30" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <polygon points="40,22 48,32 60,30 52,40 56,52 40,46 24,52 28,40 20,30 32,32" fill="#F0B90B" opacity="0.15"/>
-                  <text x="40" y="43" textAnchor="middle" fill="#F0B90B" fontSize="9" fontWeight="800">MEME</text>
-                </>}
-                {id === 'priv' && <>
-                  <path d="M 40 14 L 60 22 L 60 42 Q 60 58 40 66 Q 20 58 20 42 L 20 22 Z" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <path d="M 40 20 L 55 27 L 55 42 Q 55 54 40 60 Q 25 54 25 42 L 25 27 Z" fill="none" stroke="#F0B90B" strokeWidth="0.8" opacity="0.4"/>
-                  <circle cx="40" cy="38" r="7" fill="#F0B90B"/>
-                  <rect x="38" y="40" width="4" height="8" rx="1" fill="#C89A09"/>
-                </>}
-                {id === 'earn' && <>
-                  <circle cx="40" cy="36" r="18" fill="#F0B90B"/>
-                  <circle cx="40" cy="36" r="12" fill="#C89A09"/>
-                  <polygon points="40,26 44,34 52,34 46,40 48,48 40,44 32,48 34,40 28,34 36,34" fill="#F5CC3C"/>
-                  <line x1="28" y1="58" x2="52" y2="58" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="32" y1="64" x2="48" y2="64" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
-                </>}
-                {id === 'oss' && <>
-                  <circle cx="40" cy="36" r="18" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <circle cx="40" cy="36" r="6" fill="#F0B90B"/>
-                  <circle cx="40" cy="14" r="4" fill="#F0B90B"/>
-                  <circle cx="58" cy="46" r="4" fill="#F0B90B"/>
-                  <circle cx="22" cy="46" r="4" fill="#F0B90B"/>
-                  <line x1="40" y1="18" x2="40" y2="30" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="55" y1="44" x2="46" y2="38" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="25" y1="44" x2="34" y2="38" stroke="#F0B90B" strokeWidth="1.5"/>
-                </>}
-                {id === 'travel' && <>
-                  <circle cx="40" cy="36" r="20" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <ellipse cx="40" cy="36" rx="8" ry="20" stroke="#F0B90B" strokeWidth="1" fill="none"/>
-                  <line x1="20" y1="36" x2="60" y2="36" stroke="#F0B90B" strokeWidth="1" opacity="0.5"/>
-                  <line x1="22" y1="28" x2="58" y2="28" stroke="#F0B90B" strokeWidth="1" opacity="0.3"/>
-                  <line x1="22" y1="44" x2="58" y2="44" stroke="#F0B90B" strokeWidth="1" opacity="0.3"/>
-                  <polygon points="40,16 44,28 40,32 36,28" fill="#F0B90B"/>
-                </>}
-                {id === 'gf' && <>
-                  <circle cx="40" cy="40" r="22" stroke="#3DCC91" strokeWidth="1.5" strokeDasharray="3 4" fill="none"/>
-                  <circle cx="40" cy="40" r="10" fill="#2A9968"/>
-                  <path d="M 40 30 C 46 30 50 34 50 40 C 50 46 46 50 40 52 C 34 50 30 46 30 40 C 30 34 34 30 40 30 Z" fill="#3DCC91" opacity="0.8"/>
-                  <path d="M 40 30 L 40 52" stroke="#1A1A1A" strokeWidth="1.5"/>
-                  <path d="M 30 40 Q 40 37 50 40" stroke="#1A1A1A" strokeWidth="1.5" fill="none"/>
-                  <circle cx="40" cy="18" r="3" fill="#3DCC91"/>
-                  <circle cx="58" cy="28" r="2.5" fill="#F0B90B"/>
-                  <circle cx="58" cy="52" r="3" fill="#3DCC91"/>
-                  <circle cx="22" cy="52" r="2.5" fill="#F0B90B"/>
-                  <circle cx="22" cy="28" r="3" fill="#3DCC91"/>
-                </>}
-                {id === 'gov' && <>
-                  <rect x="18" y="36" width="44" height="26" rx="4" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <polygon points="40,14 60,36 20,36" fill="#F0B90B"/>
+                <IconA id="it" label="Issue Tokens">
+                  <circle cx="40" cy="38" r="12" fill="#F0B90B"/>
+                  <circle cx="40" cy="38" r="8" fill="#C89A09"/>
+                  <text x="40" y="42" textAnchor="middle" fill="#141414" fontSize="9" fontWeight="800">T</text>
+                  <polygon points="40,23 43,29 37,29" fill="#F0B90B"/>
+                  <line x1="40" y1="26" x2="40" y2="50" stroke="#F0B90B" strokeWidth="1" opacity="0.4"/>
+                </IconA>
+
+                <IconA id="sc" label="Smart Contracts">
+                  <rect x="31" y="26" width="18" height="22" rx="2" fill="#1A1A1A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <line x1="34" y1="31" x2="46" y2="31" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round"/>
+                  <line x1="34" y1="35" x2="44" y2="35" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round" opacity="0.6"/>
+                  <polyline points="34,41 37,44 34,47" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  <line x1="39" y1="47" x2="43" y2="41" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
+                  <polyline points="45,41 46.5,44 45,47" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </IconA>
+
+                <IconA id="bp" label="Batch Processing">
+                  <polygon points="40,24 48,29 48,34 40,39 32,34 32,29" fill="#F5CC3C"/>
+                  <polygon points="32,29 32,34 40,39 40,34" fill="#F0B90B"/>
+                  <polygon points="48,29 48,34 40,39 40,34" fill="#C89A09"/>
+                  <polygon points="40,31 48,36 48,41 40,46 32,41 32,36" fill="#1A1A1A" stroke="#F0B90B" strokeWidth="0.8"/>
+                  <polygon points="40,36 48,41 48,46 40,51 32,46 32,41" fill="#1A1A1A" stroke="#F0B90B" strokeWidth="0.8"/>
+                  <polygon points="40,37 46,40.5 40,44 34,40.5" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="0.5"/>
+                  <polygon points="40,44 46,47.5 40,51 34,47.5" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="0.5"/>
+                </IconA>
+
+                <IconA id="mev" label="MEV">
+                  <rect x="28" y="28" width="24" height="24" rx="2" transform="rotate(45 40 40)" fill="#F0B90B"/>
+                  <rect x="31" y="31" width="18" height="18" rx="1" transform="rotate(45 40 40)" fill="#141414"/>
+                  <line x1="28" y1="52" x2="52" y2="28" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round"/>
+                  <polygon points="50,26 54,30 52,28 50,26" fill="#FFFFFF"/>
+                </IconA>
+
+                <IconA id="dtols" label="Developer Tools">
+                  <circle cx="40" cy="40" r="16" fill="none" stroke="#F0B90B" strokeWidth="3"/>
+                  {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg,i) => {
+                    const r = Math.PI * deg / 180;
+                    const x1 = 40 + 13 * Math.cos(r), y1 = 40 + 13 * Math.sin(r);
+                    const x2 = 40 + 17 * Math.cos(r), y2 = 40 + 17 * Math.sin(r);
+                    return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#F0B90B" strokeWidth="3"/>;
+                  })}
+                  <circle cx="40" cy="40" r="13" fill="#141414"/>
+                  <polyline points="34,36 31,40 34,44" stroke="#F0B90B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  <line x1="37" y1="44" x2="43" y2="36" stroke="#F0B90B" strokeWidth="1.8" strokeLinecap="round"/>
+                  <polyline points="46,36 49,40 46,44" stroke="#F0B90B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </IconA>
+
+              </div>
+
+              <div className="subsection-label" style={{marginBottom:16}}>Style B — Illustrated / 3D — octagonal ring containers with gradient yellow fills</div>
+              <div className="icon-grid">
+
+                {/* Transaction Costs */}
+                <IconB id="tc" label="Transaction Costs">
+                  <circle cx="40" cy="40" r="34" fill="#2A2A2A"/>
+                  {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg,i) => {
+                    const r=Math.PI*deg/180, x1=40+28*Math.cos(r), y1=40+28*Math.sin(r), x2=40+34*Math.cos(r), y2=40+34*Math.sin(r);
+                    return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#F0B90B" strokeWidth="4" strokeLinecap="round"/>;
+                  })}
+                  <circle cx="40" cy="40" r="24" fill={`url(#ib-tc-yr)`}/>
+                  <circle cx="40" cy="40" r="18" fill="#1A1A1A"/>
+                  <text x="40" y="45" textAnchor="middle" fill="#F0B90B" fontSize="16" fontWeight="800">$</text>
+                </IconB>
+
+                {/* Total Value Locked */}
+                <IconB id="tvl" label="Total Value Locked">
+                  <polygon points="40,4 76,40 40,76 4,40" fill={`url(#ib-tvl-yl)`}/>
+                  <polygon points="40,12 68,40 40,68 12,40" fill="#1A1A1A"/>
+                  <circle cx="40" cy="36" r="7" fill="#F0B90B"/>
+                  <path d="M 40 43 Q 40 55 40 55 Q 33 48 33 43 Q 33 36 40 36 Q 47 36 47 43 Q 47 48 40 55 Z" fill="#F0B90B"/>
+                  <circle cx="40" cy="36" r="3.5" fill="#1A1A1A"/>
+                </IconB>
+
+                {/* Buy */}
+                <IconB id="buy" label="Buy">
+                  <polygon points="40,4 62,16 72,40 62,64 40,76 18,64 8,40 18,16" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <polygon points="40,10 58,20 66,40 58,60 40,70 22,60 14,40 22,20" fill={`url(#ib-buy-yl)`}/>
+                  <path d="M 28 36 L 30 28 L 50 28 L 52 36" stroke="#1A1A1A" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                  <rect x="24" y="36" width="32" height="18" rx="3" fill="#1A1A1A"/>
+                  <circle cx="32" cy="58" r="4" fill="#F0B90B"/>
+                  <circle cx="48" cy="58" r="4" fill="#F0B90B"/>
+                  <line x1="30" y1="44" x2="50" y2="44" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
+                </IconB>
+
+                {/* Smart Wallets */}
+                <IconB id="sw" label="Smart Wallets">
+                  <rect x="10" y="22" width="60" height="42" rx="8" fill="#2A2A2A"/>
+                  <rect x="12" y="24" width="56" height="38" rx="7" fill={`url(#ib-sw-yl)`}/>
+                  <rect x="18" y="30" width="44" height="26" rx="5" fill="#1A1A1A"/>
+                  <circle cx="40" cy="40" r="8" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <circle cx="38" cy="38" r="2" fill="#F0B90B"/>
+                  <circle cx="42" cy="38" r="2" fill="#F0B90B"/>
+                  <path d="M 35 43 Q 40 47 45 43" stroke="#F0B90B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                  <rect x="54" y="35" width="10" height="10" rx="3" fill="#F0B90B"/>
+                </IconB>
+
+                {/* User Experience */}
+                <IconB id="ux" label="User Experience">
+                  <rect x="8" y="18" width="64" height="44" rx="5" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="2"/>
+                  <rect x="12" y="22" width="56" height="32" rx="3" fill="#141414"/>
+                  <circle cx="40" cy="30" r="6" fill={`url(#ib-ux-yr)`}/>
+                  <path d="M 28 42 Q 34 36 40 36 Q 46 36 52 42" stroke="#F0B90B" strokeWidth="2" fill="none" strokeLinecap="round"/>
                   <line x1="34" y1="62" x2="34" y2="68" stroke="#F0B90B" strokeWidth="2"/>
                   <line x1="46" y1="62" x2="46" y2="68" stroke="#F0B90B" strokeWidth="2"/>
-                  <line x1="26" y1="68" x2="54" y2="68" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="40" y1="36" x2="40" y2="62" stroke="#F0B90B" strokeWidth="1.5" opacity="0.4"/>
-                </>}
-                {id === 'nft' && <>
-                  <rect x="16" y="16" width="30" height="30" rx="4" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <polygon points="31,22 31,36 43,36 43,22" fill="#F0B90B" opacity="0.15"/>
-                  <polyline points="18,38 24,30 30,34 36,24 42,32 44,28" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <rect x="36" y="36" width="28" height="28" rx="4" fill="#F0B90B" opacity="0.12" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <text x="50" y="54" textAnchor="middle" fill="#F0B90B" fontSize="10" fontWeight="800">NFT</text>
-                </>}
-                {id === 'slf' && <>
-                  <polygon points="40,14 64,26 64,54 40,66 16,54 16,26" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="26" y1="40" x2="54" y2="40" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="30" y1="34" x2="50" y2="34" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
-                  <line x1="32" y1="46" x2="48" y2="46" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
+                  <line x1="28" y1="68" x2="52" y2="68" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
+                  <polygon points="40,10 44,16 36,16" fill="#F0B90B"/>
+                </IconB>
+
+                {/* One BNB */}
+                <IconB id="onebnb" label="One BNB">
+                  <circle cx="40" cy="40" r="34" fill="none" stroke="#F0B90B" strokeWidth="2"/>
+                  <circle cx="40" cy="40" r="26" fill="none" stroke="#F0B90B" strokeWidth="1" strokeDasharray="4 3"/>
+                  <circle cx="40" cy="40" r="18" fill="#1A1A1A" stroke="#F0B90B" strokeWidth="2"/>
+                  <line x1="40" y1="6" x2="40" y2="22" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <line x1="74" y1="40" x2="58" y2="40" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <line x1="40" y1="74" x2="40" y2="58" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <line x1="6" y1="40" x2="22" y2="40" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <circle cx="40" cy="6" r="3" fill="#F0B90B"/>
+                  <circle cx="74" cy="40" r="3" fill="#F0B90B"/>
+                  <circle cx="40" cy="74" r="3" fill="#F0B90B"/>
+                  <circle cx="6" cy="40" r="3" fill="#F0B90B"/>
                   <circle cx="40" cy="40" r="5" fill="#F0B90B"/>
-                </>}
-                {id === 'lend' && <>
-                  <rect x="14" y="20" width="52" height="42" rx="6" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <rect x="22" y="28" width="16" height="26" rx="3" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.2"/>
-                  <line x1="24" y1="34" x2="36" y2="34" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="24" y1="40" x2="34" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="42" y1="28" x2="58" y2="28" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="42" y1="34" x2="56" y2="34" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
-                  <line x1="42" y1="40" x2="54" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
-                  <rect x="42" y="46" width="16" height="8" rx="2" fill="#F0B90B"/>
-                  <text x="50" y="52" textAnchor="middle" fill="#1A1A1A" fontSize="6" fontWeight="800">LEND</text>
-                </>}
-                {id === 'prop' && <>
-                  <rect x="18" y="14" width="44" height="52" rx="4" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="26" y1="26" x2="54" y2="26" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="26" y1="34" x2="54" y2="34" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
-                  <line x1="26" y1="42" x2="46" y2="42" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
-                  <rect x="26" y="50" width="10" height="10" rx="2" fill="#F0B90B"/>
-                  <polyline points="28,55 31,58 36,52" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                </>}
-                {id === 'gas' && <>
-                  <path d="M 26 64 L 26 28 Q 26 18 36 18 L 44 18 Q 54 18 54 28 L 54 40 Q 58 40 62 44 L 62 56 Q 62 64 54 64 Z" fill="#1E1E1E" stroke="#F0B90B" strokeWidth="1.5"/>
-                  <line x1="32" y1="28" x2="48" y2="28" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="32" y1="36" x2="48" y2="36" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
-                  <circle cx="56" cy="50" r="6" fill="#F0B90B"/>
-                  <line x1="53" y1="50" x2="59" y2="50" stroke="#1A1A1A" strokeWidth="1.5"/>
-                  <line x1="56" y1="47" x2="56" y2="53" stroke="#1A1A1A" strokeWidth="1.5"/>
-                </>}
-                {id === 'temp' && <>
-                  <line x1="40" y1="14" x2="40" y2="50" stroke="#F0B90B" strokeWidth="3" strokeLinecap="round"/>
-                  <circle cx="40" cy="56" r="8" fill="#F0B90B"/>
-                  <line x1="46" y1="24" x2="52" y2="24" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
-                  <line x1="46" y1="32" x2="54" y2="32" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
-                  <line x1="46" y1="40" x2="52" y2="40" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
-                  <rect x="34" y="14" width="12" height="38" rx="6" fill="none" stroke="#F0B90B" strokeWidth="1.5"/>
-                </>}
-              </svg>
-              <span className="icon-name">{name}</span>
-              <span className="icon-style-badge" style={{background:'rgba(255,255,255,0.05)',color:S}}>Illus.</span>
-            </div>
-          ))}
-        </div>
+                </IconB>
+
+                {/* Voting */}
+                <IconB id="vote" label="Voting">
+                  <rect x="16" y="10" width="48" height="56" rx="4" fill={`url(#ib-vote-yl)`}/>
+                  <rect x="20" y="14" width="40" height="48" rx="3" fill="#1A1A1A"/>
+                  <rect x="28" y="22" width="24" height="3" rx="1" fill="#F0B90B" opacity="0.3"/>
+                  <rect x="28" y="22" width="8" height="3" rx="1" fill="#F0B90B"/>
+                  <rect x="28" y="30" width="24" height="3" rx="1" fill="#F0B90B" opacity="0.3"/>
+                  <rect x="28" y="30" width="16" height="3" rx="1" fill="#F0B90B"/>
+                  <rect x="28" y="38" width="24" height="3" rx="1" fill="#F0B90B" opacity="0.3"/>
+                  <rect x="28" y="38" width="20" height="3" rx="1" fill="#F0B90B"/>
+                  <polyline points="26,48 30,52 40,42" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  <line x1="32" y1="6" x2="32" y2="14" stroke="#2A2A2A" strokeWidth="4" strokeLinecap="round"/>
+                  <line x1="48" y1="6" x2="48" y2="14" stroke="#2A2A2A" strokeWidth="4" strokeLinecap="round"/>
+                </IconB>
+
+                {/* Pay */}
+                <IconB id="pay" label="Pay">
+                  <circle cx="40" cy="34" r="22" fill={`url(#ib-pay-yr)`}/>
+                  <circle cx="40" cy="34" r="16" fill="#1A1A1A"/>
+                  <polygon points="40,22 45,28 40,34 35,28" fill="#F5CC3C"/>
+                  <polygon points="35,28 40,34 40,40 35,37" fill="#F0B90B"/>
+                  <polygon points="45,28 40,34 40,40 45,37" fill="#C89A09"/>
+                  <ellipse cx="30" cy="62" rx="8" ry="6" fill="#2A2A2A"/>
+                  <ellipse cx="50" cy="62" rx="8" ry="6" fill="#2A2A2A"/>
+                  <rect x="26" y="56" width="28" height="8" rx="2" fill="#2A2A2A"/>
+                </IconB>
+
+                {/* Daily Active Users */}
+                <IconB id="dau" label="Daily Active Users">
+                  <circle cx="40" cy="40" r="34" fill="none" stroke="#F0B90B" strokeWidth="2.5"/>
+                  <circle cx="40" cy="40" r="16" fill={`url(#ib-dau-yr)`}/>
+                  <circle cx="40" cy="40" r="10" fill="#141414"/>
+                  <text x="40" y="44" textAnchor="middle" fill="#F0B90B" fontSize="8" fontWeight="800">4M</text>
+                  {[0,60,120,180,240,300].map((deg,i) => {
+                    const r=Math.PI*deg/180;
+                    const cx=40+32*Math.cos(r), cy=40+32*Math.sin(r);
+                    return <circle key={i} cx={cx} cy={cy} r="4" fill="#F0B90B"/>;
+                  })}
+                </IconB>
+
+                {/* On-chain Gaming */}
+                <IconB id="game" label="On-chain Gaming">
+                  <rect x="8" y="24" width="64" height="40" rx="12" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <rect x="12" y="28" width="56" height="32" rx="10" fill="#1A1A1A"/>
+                  <line x1="28" y1="36" x2="28" y2="52" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round"/>
+                  <line x1="20" y1="44" x2="36" y2="44" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="52" cy="40" r="3.5" fill="#F0B90B"/>
+                  <circle cx="58" cy="46" r="3.5" fill="#F0B90B"/>
+                  <circle cx="46" cy="46" r="3.5" fill="#F0B90B"/>
+                  <line x1="24" y1="16" x2="28" y2="24" stroke="#F0B90B" strokeWidth="2"/>
+                  <line x1="56" y1="16" x2="52" y2="24" stroke="#F0B90B" strokeWidth="2"/>
+                </IconB>
+
+                {/* Stablecoins */}
+                <IconB id="stable" label="Stablecoins">
+                  <circle cx="40" cy="40" r="28" fill={`url(#ib-stable-yr)`}/>
+                  <circle cx="40" cy="40" r="20" fill="#1A1A1A"/>
+                  <text x="40" y="37" textAnchor="middle" fill="#F0B90B" fontSize="8" fontWeight="700">$</text>
+                  <text x="40" y="47" textAnchor="middle" fill="#F0B90B" fontSize="7" fontWeight="600">USD</text>
+                  {[0,72,144,216,288].map((deg,i) => {
+                    const r=Math.PI*deg/180;
+                    const cx=40+26*Math.cos(r), cy=40+26*Math.sin(r);
+                    return <circle key={i} cx={cx} cy={cy} r="3.5" fill="#1A1A1A" stroke="#F0B90B" strokeWidth="1"/>;
+                  })}
+                </IconB>
+
+                {/* Memecoins Surge */}
+                <IconB id="meme" label="Memecoins Surge">
+                  <ellipse cx="40" cy="54" rx="14" ry="8" fill="#2A2A2A"/>
+                  <rect x="32" y="32" width="16" height="24" rx="3" fill="#2A2A2A"/>
+                  <circle cx="40" cy="28" r="10" fill="#2A2A2A"/>
+                  <circle cx="36" cy="26" r="2" fill="#F0B90B"/>
+                  <circle cx="44" cy="26" r="2" fill="#F0B90B"/>
+                  <circle cx="40" cy="20" r="6" fill={`url(#ib-meme-yr)`}/>
+                  <text x="40" y="23" textAnchor="middle" fill="#141414" fontSize="6" fontWeight="800">$</text>
+                  <circle cx="22" cy="38" r="8" fill={`url(#ib-meme-yr)`}/>
+                  <text x="22" y="41" textAnchor="middle" fill="#141414" fontSize="7" fontWeight="800">$</text>
+                  <circle cx="58" cy="38" r="8" fill={`url(#ib-meme-yr)`}/>
+                  <text x="58" y="41" textAnchor="middle" fill="#141414" fontSize="7" fontWeight="800">$</text>
+                </IconB>
+
+                {/* Privacy */}
+                <IconB id="priv" label="Privacy">
+                  {[-45,45,135,225].map((deg,i) => {
+                    const r=Math.PI*deg/180;
+                    const x=40+32*Math.cos(r), y=40+32*Math.sin(r);
+                    return <polygon key={i} points={`${40},${40} ${40+10*Math.cos(r-0.5)},${40+10*Math.sin(r-0.5)} ${x},${y} ${40+10*Math.cos(r+0.5)},${40+10*Math.sin(r+0.5)}`} fill={`url(#ib-priv-yl)`}/>;
+                  })}
+                  <circle cx="40" cy="40" r="10" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <ellipse cx="40" cy="40" rx="5" ry="3.5" fill="#F0B90B"/>
+                  <circle cx="40" cy="40" r="2" fill="#141414"/>
+                </IconB>
+
+                {/* Total Value Locked 2 */}
+                <IconB id="tvl2" label="Total Value Locked">
+                  <polygon points="40,6 68,40 40,74 12,40" fill={`url(#ib-tvl2-yl)`}/>
+                  <polygon points="40,16 60,40 40,64 20,40" fill="#1A1A1A"/>
+                  <rect x="8" y="34" width="10" height="12" rx="2" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1"/>
+                  <rect x="62" y="34" width="10" height="12" rx="2" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1"/>
+                  <circle cx="40" cy="36" r="7" fill="#F0B90B"/>
+                  <path d="M 40 43 Q 40 56 40 56 Q 33 48 33 42 A 7 7 0 0 1 47 42 Q 47 48 40 56 Z" fill="#F0B90B"/>
+                  <circle cx="40" cy="36" r="3" fill="#141414"/>
+                </IconB>
+
+                {/* Buy 2 */}
+                <IconB id="buy2" label="Buy">
+                  <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill={`url(#ib-buy2-yl)`}/>
+                  <polygon points="40,12 68,26 68,54 40,68 12,54 12,26" fill="#1A1A1A"/>
+                  {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg,i) => {
+                    const r=Math.PI*deg/180;
+                    const x1=40+24*Math.cos(r),y1=40+24*Math.sin(r),x2=40+28*Math.cos(r),y2=40+28*Math.sin(r);
+                    return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#F0B90B" strokeWidth="2"/>;
+                  })}
+                  <circle cx="40" cy="40" r="14" fill="#F0B90B"/>
+                  <text x="40" y="44" textAnchor="middle" fill="#141414" fontSize="12" fontWeight="800">%</text>
+                </IconB>
+
+                {/* Smart Wallets 2 */}
+                <IconB id="sw2" label="Smart Wallets">
+                  <polygon points="40,4 62,16 72,40 62,64 40,76 18,64 8,40 18,16" fill={`url(#ib-sw2-yl)`}/>
+                  <polygon points="40,12 58,22 66,40 58,58 40,68 22,58 14,40 22,22" fill="#1A1A1A"/>
+                  <rect x="28" y="28" width="24" height="20" rx="4" fill="#F0B90B"/>
+                  <rect x="30" y="30" width="20" height="12" rx="3" fill="#C89A09"/>
+                  <path d="M 34 28 L 34 24 Q 40 20 46 24 L 46 28" stroke="#F0B90B" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                  <text x="40" y="44" textAnchor="middle" fill="#141414" fontSize="9" fontWeight="800">$</text>
+                </IconB>
+
+                {/* User Experience 2 */}
+                <IconB id="ux2" label="User Experience">
+                  <circle cx="40" cy="40" r="34" fill="#1A1A1A" stroke="#F0B90B" strokeWidth="2"/>
+                  <circle cx="40" cy="40" r="22" fill="none" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <circle cx="40" cy="40" r="12" fill={`url(#ib-ux2-yr)`}/>
+                  <line x1="6" y1="40" x2="18" y2="40" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <line x1="62" y1="40" x2="74" y2="40" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <line x1="40" y1="6" x2="40" y2="18" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <line x1="40" y1="62" x2="40" y2="74" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <circle cx="40" cy="40" r="5" fill="#141414"/>
+                </IconB>
+
+                {/* One BNB 2 */}
+                <IconB id="bnb2" label="One BNB">
+                  <polygon points="40,4 76,40 40,76 4,40" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <polygon points="40,14 66,40 40,66 14,40" fill="#141414"/>
+                  <rect x="30" y="30" width="20" height="24" rx="3" fill={`url(#ib-bnb2-yl)`}/>
+                  <rect x="34" y="26" width="12" height="6" rx="2" fill="#F0B90B"/>
+                  <line x1="30" y1="42" x2="50" y2="42" stroke="#141414" strokeWidth="1.5"/>
+                  <circle cx="56" cy="24" r="4" fill="#F0B90B"/>
+                  <text x="56" y="27" textAnchor="middle" fill="#141414" fontSize="6" fontWeight="800">★</text>
+                </IconB>
+
+                {/* Earn */}
+                <IconB id="earn" label="Earn">
+                  <rect x="14" y="22" width="52" height="46" rx="6" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="2"/>
+                  <rect x="16" y="24" width="48" height="42" rx="5" fill={`url(#ib-earn-yl)`}/>
+                  <rect x="20" y="28" width="40" height="34" rx="4" fill="#1A1A1A"/>
+                  <circle cx="40" cy="44" r="10" fill="none" stroke="#F0B90B" strokeWidth="2"/>
+                  <line x1="36" y1="44" x2="44" y2="44" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <line x1="40" y1="40" x2="40" y2="48" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <circle cx="40" cy="44" r="3" fill="#F0B90B"/>
+                  <text x="40" y="36" textAnchor="middle" fill="#F0B90B" fontSize="7" fontWeight="700">$</text>
+                  <rect x="28" y="10" width="24" height="14" rx="5" fill="none" stroke="#F0B90B" strokeWidth="2"/>
+                </IconB>
+
+                {/* Open-source Frameworks */}
+                <IconB id="oss" label="Open-source Frameworks">
+                  <polygon points="40,4 62,16 72,40 62,64 40,76 18,64 8,40 18,16" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <polygon points="40,12 58,22 66,40 58,58 40,68 22,58 14,40 22,22" fill="#141414"/>
+                  <rect x="26" y="28" width="22" height="28" rx="2" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <path d="M 32 22 L 32 32" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round"/>
+                  <path d="M 38 22 L 38 32" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round"/>
+                  <path d="M 44 24 Q 44 32 44 32" stroke="#F0B90B" strokeWidth="2.5" strokeLinecap="round"/>
+                  <path d="M 28 22 L 46 22" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="30" y1="36" x2="44" y2="36" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round" opacity="0.6"/>
+                  <line x1="30" y1="40" x2="44" y2="40" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round" opacity="0.6"/>
+                  <line x1="30" y1="44" x2="40" y2="44" stroke="#F0B90B" strokeWidth="1" strokeLinecap="round" opacity="0.6"/>
+                </IconB>
+
+                {/* Travel */}
+                <IconB id="travel" label="Travel">
+                  <rect x="12" y="26" width="56" height="44" rx="8" fill={`url(#ib-travel-yl)`}/>
+                  <rect x="16" y="30" width="48" height="36" rx="6" fill="#141414"/>
+                  <rect x="28" y="10" width="24" height="18" rx="4" fill="none" stroke="#F0B90B" strokeWidth="2.5"/>
+                  <rect x="24" y="46" width="32" height="4" rx="2" fill="#F0B90B" opacity="0.6"/>
+                  <circle cx="24" cy="72" r="5" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <circle cx="56" cy="72" r="5" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                </IconB>
+
+                {/* Travel 2 */}
+                <IconB id="travel2" label="Travel">
+                  <circle cx="40" cy="40" r="32" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <circle cx="40" cy="40" r="28" fill="#141414"/>
+                  <ellipse cx="40" cy="40" rx="12" ry="28" fill="none" stroke="#F0B90B" strokeWidth="1" opacity="0.6"/>
+                  <line x1="8" y1="40" x2="72" y2="40" stroke="#F0B90B" strokeWidth="1" opacity="0.6"/>
+                  <line x1="12" y1="28" x2="68" y2="28" stroke="#F0B90B" strokeWidth="1" opacity="0.4"/>
+                  <line x1="12" y1="52" x2="68" y2="52" stroke="#F0B90B" strokeWidth="1" opacity="0.4"/>
+                  <circle cx="40" cy="28" r="5" fill="#F0B90B"/>
+                  <path d="M 40 33 Q 36 38 40 42 Q 44 38 40 33 Z" fill="#F0B90B"/>
+                </IconB>
+
+                {/* BNB Greenfield */}
+                <IconB id="gf" label="BNB Greenfield">
+                  <circle cx="40" cy="40" r="34" fill="#1A1A1A" stroke="#3DCC91" strokeWidth="2"/>
+                  <circle cx="40" cy="40" r="24" fill="none" stroke="#3DCC91" strokeWidth="1" strokeDasharray="4 3" opacity="0.5"/>
+                  {[0,60,120,180,240,300].map((deg,i) => {
+                    const r=Math.PI*deg/180;
+                    return <><line key={`l${i}`} x1="40" y1="40" x2={40+24*Math.cos(r)} y2={40+24*Math.sin(r)} stroke="#3DCC91" strokeWidth="1" opacity="0.5"/><circle key={`c${i}`} cx={40+32*Math.cos(r)} cy={40+32*Math.sin(r)} r="3.5" fill="#1A1A1A" stroke={i%2===0?"#3DCC91":"#F0B90B"} strokeWidth="1.5"/></>;
+                  })}
+                  <circle cx="40" cy="40" r="12" fill="#2A9968"/>
+                  <polygon points="40,31 44,37 40,43 36,37" fill="#F5CC3C"/>
+                  <polygon points="36,37 40,43 40,47 36,43" fill="#3DCC91"/>
+                  <polygon points="44,37 40,43 40,47 44,43" fill="#2A9968"/>
+                </IconB>
+
+                {/* On-chain Governance */}
+                <IconB id="gov" label="On-chain Governance">
+                  <circle cx="40" cy="40" r="34" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <circle cx="40" cy="40" r="28" fill="#141414"/>
+                  <rect x="30" y="38" width="20" height="18" rx="1" fill={`url(#ib-gov-yl)`}/>
+                  <rect x="32" y="40" width="16" height="14" rx="1" fill="#141414"/>
+                  <polygon points="40,22 54,38 26,38" fill={`url(#ib-gov-yl)`}/>
+                  <line x1="36" y1="40" x2="36" y2="54" stroke="#F0B90B" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="40" y1="40" x2="40" y2="54" stroke="#F0B90B" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="44" y1="40" x2="44" y2="54" stroke="#F0B90B" strokeWidth="1.5" opacity="0.4"/>
+                  <circle cx="30" cy="62" r="4" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1"/>
+                  <circle cx="40" cy="62" r="4" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1"/>
+                  <circle cx="50" cy="62" r="4" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1"/>
+                  <line x1="24" y1="56" x2="56" y2="56" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round"/>
+                </IconB>
+
+                {/* NFT + Ecosystem */}
+                <IconB id="nft" label="NFT + Ecosystem">
+                  <rect x="16" y="16" width="48" height="48" rx="6" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <rect x="22" y="22" width="36" height="36" rx="4" fill="#141414"/>
+                  <polyline points="22,46 30,36 36,42 44,30 54,40 54,58" stroke="#F0B90B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.6"/>
+                  <circle cx="16" cy="16" r="4" fill="#F0B90B"/>
+                  <circle cx="64" cy="16" r="4" fill="#F0B90B"/>
+                  <circle cx="16" cy="64" r="4" fill="#F0B90B"/>
+                  <circle cx="64" cy="64" r="4" fill="#F0B90B"/>
+                  <line x1="16" y1="16" x2="6" y2="6" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <line x1="64" y1="16" x2="74" y2="6" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <line x1="16" y1="64" x2="6" y2="74" stroke="#F0B90B" strokeWidth="1.2"/>
+                  <line x1="64" y1="64" x2="74" y2="74" stroke="#F0B90B" strokeWidth="1.2"/>
+                </IconB>
+
+                {/* Scalable + Low Fees */}
+                <IconB id="slf" label="Scalable + Low Fees">
+                  <circle cx="40" cy="40" r="34" fill="#2A2A2A"/>
+                  {[0,22.5,45,67.5,90,112.5,135,157.5,180,202.5,225,247.5,270,292.5,315,337.5].map((deg,i) => {
+                    const r=Math.PI*deg/180;
+                    return <line key={i} x1={40+28*Math.cos(r)} y1={40+28*Math.sin(r)} x2={40+34*Math.cos(r)} y2={40+34*Math.sin(r)} stroke="#F0B90B" strokeWidth="3" strokeLinecap="round"/>;
+                  })}
+                  <circle cx="40" cy="40" r="26" fill="#141414"/>
+                  <circle cx="40" cy="40" r="16" fill={`url(#ib-slf-yr)`}/>
+                  <polygon points="40,32 44,36 40,40 36,36" fill="#141414"/>
+                  <polygon points="36,36 40,40 40,44 36,40" fill="#1A1A1A"/>
+                  <polygon points="44,36 40,40 40,44 44,40" fill="#0E0E0E"/>
+                  <circle cx="28" cy="40" r="4" fill="#F0B90B" opacity="0.6"/>
+                  <circle cx="52" cy="40" r="4" fill="#F0B90B" opacity="0.6"/>
+                  <text x="28" y="43" textAnchor="middle" fill="#141414" fontSize="5" fontWeight="800">$</text>
+                  <text x="52" y="43" textAnchor="middle" fill="#141414" fontSize="5" fontWeight="800">$</text>
+                </IconB>
+
+                {/* Developer Tools 2 */}
+                <IconB id="dt2" label="Developer Tools">
+                  <circle cx="40" cy="40" r="34" fill="#2A2A2A"/>
+                  {[0,22.5,45,67.5,90,112.5,135,157.5,180,202.5,225,247.5,270,292.5,315,337.5].map((deg,i) => {
+                    const r=Math.PI*deg/180;
+                    return <line key={i} x1={40+28*Math.cos(r)} y1={40+28*Math.sin(r)} x2={40+34*Math.cos(r)} y2={40+34*Math.sin(r)} stroke="#F0B90B" strokeWidth="3" strokeLinecap="round"/>;
+                  })}
+                  <circle cx="40" cy="40" r="26" fill="#141414"/>
+                  <polyline points="33,35 28,40 33,45" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  <line x1="37" y1="45" x2="43" y2="35" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round"/>
+                  <polyline points="47,35 52,40 47,45" stroke="#F0B90B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </IconB>
+
+                {/* Lend */}
+                <IconB id="lend" label="Lend">
+                  <circle cx="40" cy="32" r="22" fill={`url(#ib-lend-yr)`}/>
+                  <circle cx="40" cy="32" r="15" fill="#1A1A1A"/>
+                  <polygon points="40,22 45,26 40,30 35,26" fill="#F5CC3C"/>
+                  <polygon points="35,26 40,30 40,36 35,32" fill="#F0B90B"/>
+                  <polygon points="45,26 40,30 40,36 45,32" fill="#C89A09"/>
+                  <ellipse cx="24" cy="60" rx="12" ry="8" fill="#2A2A2A"/>
+                  <ellipse cx="56" cy="60" rx="12" ry="8" fill="#2A2A2A"/>
+                  <path d="M 22 52 Q 24 44 40 42 Q 56 44 58 52" stroke="#F0B90B" strokeWidth="1.5" fill="none"/>
+                </IconB>
+
+                {/* Proposal */}
+                <IconB id="prop" label="Proposal">
+                  <rect x="20" y="8" width="40" height="60" rx="4" fill={`url(#ib-prop-yl)`}/>
+                  <rect x="24" y="12" width="32" height="52" rx="3" fill="#141414"/>
+                  <text x="40" y="40" textAnchor="middle" fill="#F0B90B" fontSize="22" fontWeight="800">P</text>
+                  <line x1="28" y1="48" x2="52" y2="48" stroke="#F0B90B" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
+                  <line x1="28" y1="52" x2="46" y2="52" stroke="#F0B90B" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
+                  <rect x="32" y="8" width="16" height="8" rx="2" fill="#2A2A2A"/>
+                </IconB>
+
+                {/* Proposal Archived */}
+                <IconB id="propa" label="Proposal Archived">
+                  <rect x="24" y="14" width="38" height="52" rx="3" fill="#F5CC3C"/>
+                  <rect x="20" y="10" width="38" height="52" rx="3" fill={`url(#ib-propa-yl)`}/>
+                  <rect x="16" y="6" width="38" height="52" rx="4" fill="#141414" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <rect x="20" y="10" width="30" height="44" rx="3" fill="#141414"/>
+                  <text x="35" y="36" textAnchor="middle" fill="#F0B90B" fontSize="18" fontWeight="800">P</text>
+                  <line x1="22" y1="44" x2="48" y2="44" stroke="#F0B90B" strokeWidth="1" opacity="0.4"/>
+                </IconB>
+
+                {/* Gas Fees */}
+                <IconB id="gas" label="Gas Fees">
+                  <rect x="16" y="18" width="36" height="50" rx="6" fill={`url(#ib-gas-yl)`}/>
+                  <rect x="20" y="22" width="28" height="42" rx="4" fill="#141414"/>
+                  <rect x="22" y="28" width="24" height="14" rx="2" fill="#2A2A2A"/>
+                  <text x="34" y="38" textAnchor="middle" fill="#F0B90B" fontSize="7" fontWeight="700">USD</text>
+                  <rect x="16" y="12" width="36" height="8" rx="3" fill="#F0B90B"/>
+                  <rect x="52" y="22" width="12" height="18" rx="3" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1"/>
+                  <path d="M 58 18 Q 62 12 62 12 L 64 20" stroke="#F0B90B" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                  <circle cx="58" cy="46" r="6" fill="#F0B90B"/>
+                  <line x1="55" y1="46" x2="61" y2="46" stroke="#141414" strokeWidth="1.5"/>
+                  <line x1="58" y1="43" x2="58" y2="49" stroke="#141414" strokeWidth="1.5"/>
+                </IconB>
+
+                {/* Gas Fees 2 */}
+                <IconB id="gas2" label="Gas Fees">
+                  <polygon points="40,4 62,16 72,40 62,64 40,76 18,64 8,40 18,16" fill="#2A2A2A" stroke="#F0B90B" strokeWidth="1.5"/>
+                  <polygon points="40,12 58,22 66,40 58,58 40,68 22,58 14,40 22,22" fill="#141414"/>
+                  <rect x="24" y="24" width="32" height="32" rx="2" fill="#1A1A1A" stroke="#F0B90B" strokeWidth="0.8"/>
+                  {[0,1,2,3].map(row => [0,1,2,3].map(col => (
+                    <rect key={`${row}-${col}`} x={26+col*7} y={26+row*7} width="5" height="5" rx="1" fill="#F0B90B" opacity="0.4"/>
+                  )))}
+                  <path d="M 52 18 Q 58 12 58 8" stroke="#F0B90B" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                  <path d="M 54 20 Q 62 16 64 10" stroke="#F0B90B" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.6"/>
+                </IconB>
+
+                {/* Temperature Check */}
+                <IconB id="temp" label="Temperature Check">
+                  <path d="M 16 44 A 24 24 0 0 1 64 44" fill="none" stroke="#3DCC91" strokeWidth="5" strokeLinecap="round"/>
+                  <path d="M 24 52 A 16 16 0 0 1 56 52" fill="none" stroke="#F0B90B" strokeWidth="5" strokeLinecap="round"/>
+                  <path d="M 32 56 A 8 8 0 0 1 48 56" fill="none" stroke="#C89A09" strokeWidth="5" strokeLinecap="round"/>
+                  <line x1="40" y1="44" x2="52" y2="24" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+                  <circle cx="40" cy="44" r="4" fill="#FFFFFF"/>
+                  {[[30,64],[40,68],[50,64]].map(([x,y],i) => (
+                    <polygon key={i} points={`${x},${y-6} ${x+5},${y+3} ${x-5},${y+3}`} fill={i===1?'#F0B90B':'#C89A09'}/>
+                  ))}
+                </IconB>
+
+              </div>
+            </>
+          );
+        })()}
       </section>
 
       {/* ── Section: BNB Products ── */}
@@ -1154,6 +1403,132 @@ const App = () => {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ── Section: Color Palette ── */}
+      <section id="colors" className="section">
+        <div className="section-eyebrow">08 / Color Tokens</div>
+        <h2 className="section-title">Color Palette</h2>
+
+        {[
+          {
+            group: 'Brand',
+            tokens: [
+              { name: 'bnbYellow',       hex: '#F0B90B' },
+              { name: 'bnbYellowDark',   hex: '#C89A09' },
+              { name: 'bnbYellowDim',    hex: 'rgba(240,185,11,0.15)' },
+              { name: 'bnbYellowFaint',  hex: 'rgba(240,185,11,0.08)' },
+              { name: 'white',           hex: '#FFFFFF' },
+            ],
+          },
+          {
+            group: 'Backgrounds',
+            tokens: [
+              { name: 'pageBg',          hex: '#0A0A0A' },
+              { name: 'slideBg',         hex: '#111111' },
+              { name: 'cardBg',          hex: '#1A1A1A' },
+              { name: 'elevatedBg',      hex: '#252525' },
+              { name: 'iconBgStart',     hex: '#222222' },
+              { name: 'iconBgEnd',       hex: '#141414' },
+              { name: 'iconFace',        hex: '#2A2A2A' },
+              { name: 'logoPageGray',    hex: '#3A3A3A' },
+            ],
+          },
+          {
+            group: 'Text',
+            tokens: [
+              { name: 'textPrimary',     hex: '#FFFFFF' },
+              { name: 'textSecondary',   hex: '#AAAAAA' },
+              { name: 'textMuted',       hex: '#666666' },
+              { name: 'textDimmed',      hex: '#444444' },
+              { name: 'textYellow',      hex: '#F0B90B' },
+              { name: 'textTagline',     hex: '#888888' },
+            ],
+          },
+          {
+            group: 'Bento Cards',
+            tokens: [
+              { name: 'bentoLabel',      hex: '#AAAAAA' },
+              { name: 'bentoMetric',     hex: '#F0B90B' },
+              { name: 'bentoSubtitle',   hex: '#FFFFFF' },
+              { name: 'bentoDescription',hex: '#AAAAAA' },
+              { name: 'bentoCardBg',     hex: '#1A1A1A' },
+              { name: 'bentoCardBorder', hex: 'rgba(255,255,255,0.06)' },
+            ],
+          },
+          {
+            group: 'Competitor Accents (page 36)',
+            tokens: [
+              { name: 'solanaAccent',    hex: '#9945FF' },
+              { name: 'ethereumAccent',  hex: '#4DB3FF' },
+              { name: 'nearAccent',      hex: '#00C1DE' },
+              { name: 'totalAddresses',  hex: '#FFFFFF' },
+            ],
+          },
+          {
+            group: 'BNB Products',
+            tokens: [
+              { name: 'greenfieldGreen',     hex: '#3DCC91' },
+              { name: 'greenfieldGreenDark', hex: '#2A9968' },
+              { name: 'bscChainLink',        hex: '#B0B0B0' },
+            ],
+          },
+          {
+            group: 'Borders',
+            tokens: [
+              { name: 'borderSubtle',    hex: 'rgba(255,255,255,0.06)' },
+              { name: 'borderMedium',    hex: 'rgba(255,255,255,0.12)' },
+              { name: 'borderYellow',    hex: '#F0B90B' },
+              { name: 'borderIcon',      hex: 'rgba(255,255,255,0.07)' },
+            ],
+          },
+          {
+            group: 'Tables',
+            tokens: [
+              { name: 'tableHeader',     hex: '#2C2C2C' },
+              { name: 'tableRowPrimary', hex: '#1E1E1E' },
+              { name: 'tableRowAlt',     hex: '#252525' },
+            ],
+          },
+          {
+            group: 'Charts',
+            tokens: [
+              { name: 'chartBnb',        hex: '#F0B90B' },
+              { name: 'chartCompetitor', hex: '#3A3A3A' },
+              { name: 'chartGrid',       hex: 'rgba(255,255,255,0.05)' },
+            ],
+          },
+          {
+            group: 'Badges',
+            tokens: [
+              { name: 'badgeDarkBg',    hex: '#1A1A1A' },
+              { name: 'badgeOutlineFg', hex: '#F0B90B' },
+              { name: 'badgeFillBg',    hex: '#F0B90B' },
+              { name: 'badgeFillFg',    hex: '#000000' },
+            ],
+          },
+        ].map(({ group, tokens }) => (
+          <div key={group} style={{ marginBottom: 36 }}>
+            <div className="subsection-label" style={{ marginBottom: 12 }}>{group}</div>
+            <div className="color-grid">
+              {tokens.map(({ name, hex }) => (
+                <div key={name} className="color-swatch">
+                  <div
+                    className="color-swatch-block"
+                    style={{
+                      background: hex,
+                      border: (hex === '#FFFFFF' || hex === '#000000') ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                    }}
+                  />
+                  <div className="color-swatch-info">
+                    <div className="color-swatch-name">{name}</div>
+                    <div className="color-swatch-hex">{hex}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </section>
 
       {/* Footer */}
